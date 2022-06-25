@@ -1,12 +1,18 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@types/node': ^18.0.0
   excel4node: ^1.7.2
 
 dependencies:
+  '@types/node': 18.0.0
   excel4node: 1.7.2
 
 packages:
+
+  /@types/node/18.0.0:
+    resolution: {integrity: sha512-cHlGmko4gWLVI27cGJntjs/Sj8th9aYwplmZFwmmgYQQvL5NUsgVJG7OddLvNfLqYS31KFN0s3qlaD9qCaxACA==}
+    dev: false
 
   /core-util-is/1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
