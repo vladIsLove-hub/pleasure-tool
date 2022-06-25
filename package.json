@@ -4,7 +4,7 @@
   "description": "Tool which will save you a huge amount of time that you could spend in minecraft or somewhere else",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "pnpx typescript"
   },
   "repository": {
     "type": "git",
