@@ -1,0 +1,28 @@
+{
+  "name": "pleasure-tool",
+  "version": "1.0.0",
+  "description": "Tool which will save you a huge amount of time that you could spend in minecraft or somewhere else",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vladIsLove-hub/pleasure-tool.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "JS",
+    "Automation",
+    "Excel"
+  ],
+  "author": "Akvelon offshore team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vladIsLove-hub/pleasure-tool/issues"
+  },
+  "homepage": "https://github.com/vladIsLove-hub/pleasure-tool#readme",
+  "dependencies": {
+    "excel4node": "^1.7.2"
+  }
+}
