@@ -8,14 +8,13 @@
     // "jsx": "preserve",    
 
     /* Modules */
-    "module": "ES2022",                                /* Specify what module code is generated. */
-    "rootDir": "./",                                  /* Specify the root folder within your source files. */
-    "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
-    
+    "module": "CommonJS",                                /* Specify what module code is generated. */
+    "rootDir": ".",                                  /* Specify the root folder within your source files. */
+    "resolveJsonModule": true,
     /* Emit */
     // "outFile": "index.js",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
     "outDir": "./lib",                                   /* Specify an output folder for all emitted files. */
-    
+
     /* Interop Constraints */
     "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
