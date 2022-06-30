@@ -1,13 +1,7 @@
-import { IStatus } from "./types/status";
+import { IStatus } from "./types/status.types";
 import projectTypes from '../../project.types.json';
-import { IRowReport } from "./types/rowReport";
-
-interface ITask {
-    type: string;
-    time: number;
-    description: string;
-}
-
+import { IRowReport } from "./types/rowReport.types";
+import { ITask } from "./types/task.types";
 
 const getDescriptionType = async (description: string): Promise<string | void> => { // TODO: we should add exception inside <remove void>
     for (const [type, typeInfo] of Object.entries(projectTypes)) {
@@ -78,7 +72,6 @@ export const generateRowReports = async (statuses: IStatus[]): Promise<IRowRepor
         }
 
         const normalizeTaskList = await timeNormalize(taskList);
-
         normalizeTaskList.forEach((task) => rowReports.push({
             date,
             description: task.description,

@@ -1,7 +1,7 @@
 import { toExcel } from './src/core/excel';
-import { parser } from './src/parser/parser';
+import Parser from './src/parser/Parser';
 
 (async () => {
-    const rowReports = await parser();
+    const rowReports = await new Parser().parse();
     toExcel(rowReports);
 })()

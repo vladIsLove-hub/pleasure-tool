@@ -2,3 +2,4 @@ node_modules/
 project.types.json
 statuses.txt
 lib/
+*.xlsx
