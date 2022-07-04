@@ -6,9 +6,9 @@ class Logger implements ILogger {
     console.log(...messages);
   }
 
-  public error(e: Error | string): void {
+  public error(e: Error | string): Error {
     if (typeof e === 'string') {
-      throw new Error(chalk.bold.red(e));
+      throw new Error(chalk.bold.red(e.trim()));
     }
 
     throw new Error(`

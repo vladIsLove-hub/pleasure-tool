@@ -5,20 +5,23 @@ import { ITask } from "./types/task.types";
 import { IReportGenerator, ProjectTypes } from "./types/reportGenerator.types";
 import { IUtils } from "../utils/types/utils.types";
 import utils from '../utils/Utils';
+import { ILogger } from "../logger/types/logger.types";
+import logger from '../logger/Logger';
 
 class ReportGenerator implements IReportGenerator {
-  private static projectTypes: ProjectTypes = JSON.parse(JSON.stringify(projectTypesConfig));
-
+  private projectTypes: ProjectTypes;
   private rowReports: IRowReport[] = [];
 
-  constructor(private utils: IUtils) {
+  constructor(private utils: IUtils, private logger: ILogger) {
     this.utils = utils;
+    this.logger = logger;
+    this.projectTypes = this.validateProjectTypesConfig();
   }
 
   public async generateRowReports(statuses: IStatus[]): Promise<IRowReport[]> {
     for (const status of statuses) {
-      const { date, statusText } = status;
-      const taskDescriptions: string[] = await this.getTaskDescriptions(statusText);
+      const { date } = status;
+      const taskDescriptions: string[] = await this.getTaskDescriptions(status);
       const tasks: ITask[] = await this.createTasks(taskDescriptions);
       const normalizedTasks = await this.utils.getNormalizedTasksByEfforts(tasks);
 
@@ -33,11 +36,26 @@ class ReportGenerator implements IReportGenerator {
     return this.rowReports;
   }
 
-  private async getTaskDescriptions(statusText: string): Promise<string[]> {
-    return statusText
+  private async getTaskDescriptions(status: IStatus): Promise<string[]> {
+    const { date, statusText } = status;
+
+    const filteredTaskDescriptions: string[] = statusText
       .split('\n')
-      .filter((description: string) => description.trim().startsWith('-'))
-      .map((description: string) => description.replace(/\s{0,}-\s{0,}/, '').replace('\r', ''));
+      .filter((descriptionLine: string) => descriptionLine.length)
+
+    for (const filteredTaskDescription of filteredTaskDescriptions) {
+      if (!filteredTaskDescription.trim().startsWith('-')) {
+        this.logger.error(`Wrong description format for the following date: ${date}. Each description must start with '-'.`)
+      }
+    }
+
+    if (!filteredTaskDescriptions.length) {
+      this.logger.error(`
+          No descriptions were found in <statuses.txt> file which start with '-' for the following date: ${date}.
+        `);
+    }
+
+    return filteredTaskDescriptions.map((description: string) => description.replace(/\s{0,}-\s{0,}/, '').replace('\r', ''));
   }
 
   private async createTasks(taskDescriptions: string[]): Promise<ITask[]> {
@@ -47,7 +65,7 @@ class ReportGenerator implements IReportGenerator {
       const descriptionType: string = await this.getDescriptionType(taskDescription) || '';
       tasks.push({
         type: descriptionType,
-        time: ReportGenerator.projectTypes[descriptionType].max,
+        time: this.projectTypes[descriptionType].max,
         description: taskDescription,
       })
     }
@@ -56,14 +74,34 @@ class ReportGenerator implements IReportGenerator {
   }
 
   private async getDescriptionType(description: string): Promise<string | void> { // TODO: we should add exception inside <remove void>
-    for (const [type, typeInfo] of Object.entries(ReportGenerator.projectTypes)) {
+    for (const [type, typeInfo] of Object.entries(this.projectTypes)) {
       if (typeof typeInfo !== 'string') {
         for (const keyWord of typeInfo.wildcard) {
-          if (description.toLocaleLowerCase().includes(keyWord.toLocaleLowerCase())) return type;
+          if (description.toLocaleLowerCase().includes(keyWord.toLocaleLowerCase())) {
+            return type;
+          };
         }
-      } //TODO: we should handle error if typeInfo is not object.
+      } 
     }
+  }
+
+  private validateProjectTypesConfig(): ProjectTypes {
+    const projectTypes = JSON.parse(JSON.stringify(projectTypesConfig));
+
+    if (!projectTypes || Array.isArray(projectTypes)) {
+      this.logger.error(`Wrong <project.types.json> config format. Please read README.md`);
+    }
+
+    for (let key in projectTypes) {
+      const typeInfo = projectTypes[key];
+
+      if (!('min' in typeInfo) || !('max' in typeInfo) || !('wildcard' in typeInfo)) {
+        this.logger.error(`Wrong <project.types.json> config format, for project type: ${key}. Please read README.md`);
+      }
+    }
+
+    return projectTypes;
   }
 }
 
-export default new ReportGenerator(utils);
+export default new ReportGenerator(utils, logger);

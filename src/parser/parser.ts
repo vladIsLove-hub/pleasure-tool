@@ -4,29 +4,40 @@ import { IRowReport } from '../report-generator/types/rowReport.types';
 import { IParser } from './types/parser.types';
 import path from 'path';
 import { IReportGenerator } from '../report-generator/types/reportGenerator.types';
+import { ILogger } from '../logger/types/logger.types';
 
 export default class Parser implements IParser {
     private static STATUSES_PATH: string = path.resolve(process.cwd(), '../statuses.txt')
     private static STATUS_SEPARATOR: string = '===';
-    
-    private reportGenerator: IReportGenerator;
 
-    constructor (reportGenerator: IReportGenerator) {
+    private reportGenerator: IReportGenerator;
+    private logger: ILogger;
+
+    constructor(reportGenerator: IReportGenerator, logger: ILogger) {
         this.reportGenerator = reportGenerator;
+        this.logger = logger;
     }
 
     public async parse(): Promise<IRowReport[]> {
         const statusesFileContent = await this.getStatusesFileContent();
+
+        if (!statusesFileContent) {
+            this.logger.error('Statuses file is empty. Please read README.md');
+        }
+
         const statuses: IStatus[] = statusesFileContent
-                                        .split(Parser.STATUS_SEPARATOR)
-                                        .map((status: string) => {
-                                            const [month, day, year] = status.match(/\d{0,}\/\d{0,}\/\d{0,}/gi)![0].split('/');
-                                            const date = `${month}/${+day + 1}/${year}`;
-                                            return {
-                                                date,
-                                                statusText: status.replace(date, '').trim()
-                                            }
-                                        });
+            .split(Parser.STATUS_SEPARATOR)
+            .map((status: string) => {
+                const parsedData = status.match(/\d{0,}\/\d{0,}\/\d{0,}/gi)
+                if (!parsedData) {
+                    this.logger.error('Wrong statuses file format. Please read README.md');
+                }
+                const date = parsedData![0];
+                return {
+                    date,
+                    statusText: status.replace(date, '').trim()
+                }
+            });
 
         return await this.reportGenerator.generateRowReports(statuses);
     }

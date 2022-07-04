@@ -1,6 +1,7 @@
 import './excel';
 import excel from 'excel4node';
 
+//TODO: add properly date format
 class ExcelGenerator {
   constructor(excel) {
     this.excel = excel;
