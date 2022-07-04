@@ -23,10 +23,12 @@
   },
   "homepage": "https://github.com/vladIsLove-hub/pleasure-tool#readme",
   "dependencies": {
-    "@types/node": "^18.0.0",
+    "chalk": "4.1.2",
     "excel4node": "^1.7.2"
   },
   "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/node": "^18.0.0",
     "prettier": "^2.7.1"
   }
 }
