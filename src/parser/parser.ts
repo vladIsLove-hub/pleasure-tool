@@ -6,7 +6,7 @@ import path from 'path';
 import { IReportGenerator } from '../report-generator/types/reportGenerator.types';
 
 export default class Parser implements IParser {
-    private static STATUSES_PATH: string = path.resolve(process.cwd(), '../../statuses.txt')
+    private static STATUSES_PATH: string = path.resolve(process.cwd(), '../statuses.txt')
     private static STATUS_SEPARATOR: string = '===';
     
     private reportGenerator: IReportGenerator;

@@ -1,7 +1,10 @@
-import { toExcel } from './src/core/excel';
 import Parser from './src/parser/Parser';
+import reportGenerator from './src/report-generator/ReportGenerator';
+import excelGenerator from './src/core/ExcelGenerator';
 
-(async () => {
-    const rowReports = await new Parser().parse();
-    toExcel(rowReports);
-})()
+const main = async () => {
+    const rowReports = await new Parser(reportGenerator).parse();
+    excelGenerator.generate(rowReports);
+}
+
+main();
