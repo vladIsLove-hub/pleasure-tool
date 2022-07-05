@@ -7,9 +7,10 @@ import { IReportGenerator } from '../report-generator/types/reportGenerator.type
 import { ILogger } from '../logger/types/logger.types';
 
 export default class Parser implements IParser {
-    private static STATUSES_PATH: string = path.resolve(process.cwd(), '../statuses.txt')
+    private static STATUSES_PATH: string = path.resolve(process.cwd(), '../statuses.txt');
     private static STATUS_SEPARATOR: string = '===';
 
+    private uniqueDates: string[] = [];
     private reportGenerator: IReportGenerator;
     private logger: ILogger;
 
@@ -30,9 +31,23 @@ export default class Parser implements IParser {
             .map((status: string) => {
                 const parsedData = status.match(/\d{0,}\/\d{0,}\/\d{0,}/gi)
                 if (!parsedData) {
-                    this.logger.error('Wrong statuses file format. Please read README.md');
+                    this.logger.error(`Wrong date format for the status: \n ${status}`);
                 }
-                const date = parsedData![0];
+
+                const dateToValidate = new Date(parsedData![0]);
+                
+                if (!(dateToValidate instanceof Date) || isNaN(<any>dateToValidate)) {
+                    this.logger.error(`Wrong date format for the status: \n ${status}`);
+                }
+
+                const date = dateToValidate.toLocaleDateString();
+
+                if (this.uniqueDates.includes(date)) {
+                    this.logger.error(`Duplicate date was found: ${date}`);
+                }
+
+                this.uniqueDates.push(date);
+
                 return {
                     date,
                     statusText: status.replace(date, '').trim()
@@ -43,6 +58,13 @@ export default class Parser implements IParser {
     }
 
     private async getStatusesFileContent(): Promise<string> {
-        return await fs.readFile(Parser.STATUSES_PATH, { encoding: 'utf-8' });
+        try {
+            return await fs.readFile(Parser.STATUSES_PATH, { encoding: 'utf-8' });
+        } catch(e) {
+            if (e instanceof Error) {
+                this.logger.error(`File <statuses.txt> was not found by the following path: ${Parser.STATUSES_PATH}`)
+            }
+            throw e;
+        }
     }
 }

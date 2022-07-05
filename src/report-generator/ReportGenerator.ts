@@ -76,7 +76,7 @@ class ReportGenerator implements IReportGenerator {
     return tasks;
   }
 
-  private async getDescriptionType(description: string): Promise<string | void> { // TODO: we should add exception inside <remove void>
+  private async getDescriptionType(description: string): Promise<string | void> { // TODO: we might not find description type by keyword.
     for (const [type, typeInfo] of Object.entries(this.projectTypes)) {
       if (typeof typeInfo !== 'string') {
         for (const keyWord of typeInfo.wildcard) {
