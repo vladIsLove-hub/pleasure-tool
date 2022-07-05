@@ -7,15 +7,18 @@ import { IUtils } from "../utils/types/utils.types";
 import utils from '../utils/Utils';
 import { ILogger } from "../logger/types/logger.types";
 import logger from '../logger/Logger';
+import { IReportValidator } from "./types/reportValidator.types";
+import reportValidator from './ReportValidator';
 
 class ReportGenerator implements IReportGenerator {
   private projectTypes: ProjectTypes;
   private rowReports: IRowReport[] = [];
 
-  constructor(private utils: IUtils, private logger: ILogger) {
+  constructor(private utils: IUtils, private logger: ILogger, private reportValidator: IReportValidator) {
     this.utils = utils;
     this.logger = logger;
-    this.projectTypes = this.validateProjectTypesConfig();
+    this.reportValidator = reportValidator;
+    this.projectTypes = this.getProjectTypes();
   }
 
   public async generateRowReports(statuses: IStatus[]): Promise<IRowReport[]> {
@@ -85,23 +88,11 @@ class ReportGenerator implements IReportGenerator {
     }
   }
 
-  private validateProjectTypesConfig(): ProjectTypes {
+  private getProjectTypes(): ProjectTypes {
     const projectTypes = JSON.parse(JSON.stringify(projectTypesConfig));
-
-    if (!projectTypes || Array.isArray(projectTypes)) {
-      this.logger.error(`Wrong <project.types.json> config format. Please read README.md`);
-    }
-
-    for (let key in projectTypes) {
-      const typeInfo = projectTypes[key];
-
-      if (!('min' in typeInfo) || !('max' in typeInfo) || !('wildcard' in typeInfo)) {
-        this.logger.error(`Wrong <project.types.json> config format, for project type: ${key}. Please read README.md`);
-      }
-    }
-
+    this.reportValidator.validateProjectTypesConfig(projectTypes);
     return projectTypes;
   }
 }
 
-export default new ReportGenerator(utils, logger);
+export default new ReportGenerator(utils, logger, reportValidator);

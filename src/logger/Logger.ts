@@ -19,6 +19,14 @@ class Logger implements ILogger {
     `)
   }
 
+  public wrongFormatError(key: string, errMessage: string): void {
+    this.error(
+      `Wrong <project.types.json> config format, for project type: ${key} \n`
+      + `${errMessage}`
+      + `Please read README.md`
+    );
+  }
+
   public warn(warning: string): void {
     console.log('\n', chalk.bold.yellow('WARNING: '), warning, '\n')
   }
