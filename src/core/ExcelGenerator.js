@@ -1,7 +1,6 @@
 import './excel';
 import excel from 'excel4node';
 
-//TODO: add properly date format
 class ExcelGenerator {
   constructor(excel) {
     this.excel = excel;
@@ -19,10 +18,12 @@ class ExcelGenerator {
 
     let rowIndex = 3
     for (const rowReport of rowReports) {
+      const currentDate = new Date(rowReport.date);
+      currentDate.setDate(currentDate.getDate() + 1);
       this.worksheet.cell(rowIndex, 1).string(rowReport.reportType).style(this.styles);
       this.worksheet.cell(rowIndex, 2).number(rowReport.effortTime).style(this.styles);
       this.worksheet.cell(rowIndex, 3).string(rowReport.description).style(this.styles);
-      this.worksheet.cell(rowIndex, 4).date(rowReport.date).style(this.styles);
+      this.worksheet.cell(rowIndex, 4).date(currentDate).style(this.styles);
       rowIndex++;
     }
   

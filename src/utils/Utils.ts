@@ -1,18 +1,25 @@
+import chalk from "chalk";
+import logger from "../logger/Logger";
+import { ILogger } from "../logger/types/logger.types";
 import { ITask } from "../report-generator/types/task.types";
 import { IUtils } from "./types/utils.types";
 
 class Utils implements IUtils {
-  public async getNormalizedTasksByEfforts(taskList: ITask[]): Promise<ITask[]> {
+
+  constructor(private readonly logger: ILogger) {
+    this.logger = logger;
+  }
+
+  public async getNormalizedTasksByEfforts(taskList: ITask[], date: string): Promise<ITask[]> {
     const timeUnitInHours = 0.25;
     const expectedTimeInHours = 8;
 
     const getTaskWithMaxTime = async (taskList: ITask[]): Promise<ITask> => {
-      // TODO: We should add check for empty tasklist here
-      let currentMax = taskList[0].time;
-      let currentTask = taskList[0];
+      let [ { time: currentMaxTime } ] = taskList;
+      let [ currentTask ] = taskList;
       for (let i = 1; i < taskList.length; i++) {
-        if (currentMax < taskList[i].time) {
-          currentMax = taskList[i].time;
+        if (currentMaxTime < taskList[i].time) {
+          currentMaxTime = taskList[i].time;
           currentTask = taskList[i];
         }
       }
@@ -21,19 +28,21 @@ class Utils implements IUtils {
 
     let tasksTotalTime: number = taskList.reduce((acc, task) => acc += task.time, 0);
 
+    let description: string;
     if (tasksTotalTime > expectedTimeInHours) {
       while (true) {
         if (expectedTimeInHours === tasksTotalTime) break;
         const task = await getTaskWithMaxTime(taskList);
+        description = task.description;
         task.time -= timeUnitInHours;
         tasksTotalTime -= timeUnitInHours;
       }
     } else {
-      throw new Error('You should write more fields in your status per day'); //TODO:  Add log about particular status with its date
+      this.logger.error(`You must write more fields in your status for date: ${chalk.underline(date)}`);
     }
 
-    return taskList; //TODO: get read of return because function changes args
+    return taskList;
   }
 }
 
-export default new Utils();
+export default new Utils(logger);

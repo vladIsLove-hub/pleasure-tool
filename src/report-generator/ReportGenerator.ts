@@ -9,6 +9,7 @@ import { ILogger } from "../logger/types/logger.types";
 import logger from '../logger/Logger';
 import { IReportValidator } from "./types/reportValidator.types";
 import reportValidator from './ReportValidator';
+import chalk from "chalk";
 
 class ReportGenerator implements IReportGenerator {
   private projectTypes: ProjectTypes;
@@ -26,7 +27,7 @@ class ReportGenerator implements IReportGenerator {
       const { date } = status;
       const taskDescriptions: string[] = await this.getTaskDescriptions(status);
       const tasks: ITask[] = await this.createTasks(taskDescriptions);
-      const normalizedTasks = await this.utils.getNormalizedTasksByEfforts(tasks);
+      const normalizedTasks = await this.utils.getNormalizedTasksByEfforts(tasks, date);
 
       normalizedTasks.forEach((task) => this.rowReports.push({
         date,
@@ -66,6 +67,11 @@ class ReportGenerator implements IReportGenerator {
 
     for (const taskDescription of taskDescriptions) {
       const descriptionType: string = await this.getDescriptionType(taskDescription) || '';
+
+      if (!descriptionType) {
+        this.logger.error(`No matching description type was found for description type: ${chalk.underline(taskDescription)}`)
+      }
+
       tasks.push({
         type: descriptionType,
         time: this.projectTypes[descriptionType].max,
@@ -76,7 +82,7 @@ class ReportGenerator implements IReportGenerator {
     return tasks;
   }
 
-  private async getDescriptionType(description: string): Promise<string | void> { // TODO: we might not find description type by keyword.
+  private async getDescriptionType(description: string): Promise<string | void> {
     for (const [type, typeInfo] of Object.entries(this.projectTypes)) {
       if (typeof typeInfo !== 'string') {
         for (const keyWord of typeInfo.wildcard) {
