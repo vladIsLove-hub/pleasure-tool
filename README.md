@@ -26,7 +26,7 @@ Let's start with `project.types.json`. It's the main file where tasks of your pr
     "{key}": {
         "min": {min_value},
         "max": {max_value},
-        "wildcard": ["{first_keyword}", "{second_keyword}", ...]
+        "wildcard": ["first_keyword", "second_keyword", ...]
     },
     ...
 }
@@ -39,22 +39,22 @@ Example:
     "PBI Desktop, Build and Accessibility.Development": {
         "min": 0,
         "max": 3,
-        "wildcard": ["Update", "Creating", "Fix", "Create", "develop", "implementing", "implement", "Change", "Refactored", "Rewrote", "Resolve"]
+        "wildcard": ["update", "updating", "create", "creating", "develop", "implement", "change", "refactor", "rewrote", "resolve"]
     },
     "PBI Desktop, Build and Accessibility.Investigation": {
         "min": 0,
         "max": 3,
-        "wildcard": ["Investigate", "Investigating", "Investigation", "Debug"]
+        "wildcard": ["investigate", "investigating", "investigation", "debug", "research"]
     }
 }
 ```
 
-Key  | Description
-------------- | -------------
-key: `string` |  Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)
-min: `number`  |  The minimum time that will be spent to complete the task (0 by default)
-max: `number` |  The maximum time that will be spent to complete the task (you can specify your default time here by yourself)
-wildcard: `string[]` |  Non-empty array of keywords which match specific project taskname.
+Key  |  Type  |  Description
+--- | --- | -------------
+key | `string` |  Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)
+min | `number`  |  The minimum time that will be spent to complete the task (0 by default)
+max | `number` |  The maximum time that will be spent to complete the task (you can specify your default time here by yourself)
+wildcard | `string[]` |  Non-empty array of keywords which match specific project taskname.
 
 Let's investigate the first object inside `project.types.json`, because other objects will be almost the same.
 
@@ -73,7 +73,7 @@ After downloading `.xlsx` document, open it with Excel and you'll see all your t
 
 ### About `statuses.txt` file.
 
-Firstly, you sould create `statuses.txt` file in the project's root.
+Firstly, you need to create `statuses.txt` file in the project's root.
 `statuses.txt` structure:
 
 ```txt
@@ -94,24 +94,25 @@ Example:
 
 ```txt
 7/19/2022
- - Investigated something
- - Implemented something
- - Participated in something
- - Tested something
+ - Investigated task 1
+ - Implemented functionality for task 1
+ - Participated in meeting
+ - Tested changes for task 1
  ===
  7/20/2022
- - Investigated something
- - Implemented something
- - Participated in something
- - Tested something
+ - Investigated task 2
+ - Investigated more in task 2
+ - Participated in meeting
 ```
 
 Two rules must be followed while creating `statuses.txt`:
-- each of your statuses must start with date written in correct date format (For instance: `7/30/2022` or `7-30-2022`, `{month}/{date}/{year}` or `{month}-{date}-{year}`). Slashes and dashed are supported as delimiters between `{month}` `{date}` and `{year}`;
+- each of your statuses must start with date written in correct date format (For instance: `7/30/2022` or `7-30-2022`). Slashes and dashed are supported as delimiters between `{month}` `{date}` and `{year}`, so formats `{month}/{date}/{year}` and `{month}-{date}-{year}` are supported;
 - each of your statuses must a separator ```===``` following it, except the last status.
 
 ### Excel time report file generation 
 
 As soon as all previous steps are completed you need to run: `pnpm build` in the root folder.
 
-After that `Reports.xlsx` file will appear. Enjoy!
+After that `Reports.xlsx` file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality. 
+
+Enjoy!
