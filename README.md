@@ -21,17 +21,11 @@ This tool needs two particular files: `statuses.txt` and `project.types.json`.
 Let's start with `project.types.json`. It's the main file where tasks of your project are described.
 `project.types.info` structure: 
 
-But what happens if you need to have a `` ` `` in your escaped text?
-
-To use Mermaid delimit your code with a `` ```mermaid`` block
-
-A generic looks like this: ``CustomList<`1>``
-
-```json
+```json5
 {
     "{key}": {
-        "min": "{min_value}",
-        "max": "{max_value}",
+        "min": {min_value},
+        "max": {max_value},
         "wildcard": ["{first_keyword}", "{second_keyword}", ...]
     },
     ...
@@ -86,6 +80,13 @@ Firstly, you sould create `statuses.txt` file in the project's root.
 {month}/{date}/{year}
  - {first_task_description}
  - {second_task_description}
+...
+===
+{month}/{date}/{year}
+ - {first_task_description}
+ - {second_task_description}
+...
+===
 ...
 ```
 
