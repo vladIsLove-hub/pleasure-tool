@@ -56,7 +56,7 @@ You have downloaded `.xlsx` document with all your tasks' types in your project,
 Firstly, you sould create `statuses.txt` file in the project's root.
 `statuses.txt` structure:
 
-```
+```txt
 {month}/{date}/{year}
  - {first_task_description}
  - {second_task_description}
@@ -65,7 +65,7 @@ Firstly, you sould create `statuses.txt` file in the project's root.
 
 Example:
 
-```
+```txt
 7/19/2022
  - Investigated something
  - Implemented something
@@ -79,10 +79,11 @@ Example:
  - Tested something
 ```
 
-You as a users need to follow these 2 rules:
+2 rules must be followed:
 - Each of your statuses must start with Date and make sure that you have proper date format (For instance: `7/30/2022` or `7-30-2022`, `{month}/{date}/{year}`)
 - Each of your status must include a separator: ```===```
 
-### As soon as all previous steps are completed you need to run: `pnpm build` in the root folder.
+### Excel time report file generation 
 
+As soon as all previous steps are completed you need to run: `pnpm build` in the root folder.
 After that `Reports.xlsx` file will appear. Enjoy!
