@@ -11,7 +11,7 @@ This tool need two particular files: `statuses.txt` and `project.types.json`.
 
 ### About `project.types.json` file
 
-Let's start with `project.types.json`. It's the main file for your project's info detection.
+Let's start with `project.types.json`. It's the main file where tasks of your project are described.
 `project.types.info` structure example: 
 ```json
 {
