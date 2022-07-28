@@ -1,18 +1,39 @@
 # Pleasure-Tool
-### Tool which will save you a huge amount of time that you could spend on yourself or somewhere else!
+
+### What is it
+
+Tool which will save you a huge amount of time that you could spend on yourself or something else!
+
+### What it does
+
+It generates excel time report file, based on your daily text statuses. 
 
 Before using it, please follow the steps:
- - Clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`.
- - Run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not just run: `npm i -g pnpm`).
+ - clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`;
+ - run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not just run: `npm i -g pnpm`).
  
-### How to use it?
+### How to use
 
-This tool need two particular files: `statuses.txt` and `project.types.json`.
+This tool needs two particular files: `statuses.txt` and `project.types.json`.
 
 ### About `project.types.json` file
 
 Let's start with `project.types.json`. It's the main file where tasks of your project are described.
-`project.types.info` structure example: 
+`project.types.info` structure: 
+
+```json
+{
+    "{key}": {
+        "min": {min},
+        "max": {max},
+        "wildcard": ["{first_keyword}", "{second_keyword}", ...]
+    },
+    ...
+}
+```
+
+Example:
+
 ```json
 {
     "PBI Desktop, Build and Accessibility.Development": {
@@ -25,7 +46,6 @@ Let's start with `project.types.json`. It's the main file where tasks of your pr
         "max": 3,
         "wildcard": ["Investigate", "Investigating", "Investigation", "Debug"]
     }
-    ...
 }
 ```
 
@@ -34,7 +54,7 @@ Key  | Description
 key: `string` |  Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)
 min: `number`  |  The minimum time that will be spent to complete the task (0 by default)
 max: `number` |  The maximum time that will be spent to complete the task (you can specify your default time here by yourself)
-wildcard: `string[]` |  Array of strings (keywords) which match specific project type.
+wildcard: `string[]` |  Non-empty array of keywords which match specific project taskname.
 
 Let's investigate the first object inside `project.types.json`, because other objects will be almost the same.
 
@@ -79,11 +99,12 @@ Example:
  - Tested something
 ```
 
-2 rules must be followed:
-- Each of your statuses must start with Date and make sure that you have proper date format (For instance: `7/30/2022` or `7-30-2022`, `{month}/{date}/{year}`)
-- Each of your status must include a separator: ```===```
+Two rules must be followed while creating `statuses.txt`:
+- each of your statuses must start with date written in correct date format (For instance: `7/30/2022` or `7-30-2022`, `{month}/{date}/{year}` or `{month}-{date}-{year}`). Slashes and dashed are supported as delimiters between `{month}` `{date}` and `{year}`;
+- each of your statuses must a separator ```===``` following it, except the last status.
 
 ### Excel time report file generation 
 
 As soon as all previous steps are completed you need to run: `pnpm build` in the root folder.
+
 After that `Reports.xlsx` file will appear. Enjoy!
