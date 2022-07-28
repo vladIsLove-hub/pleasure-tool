@@ -9,7 +9,7 @@ Before using it, please follow the steps:
 
 This tool need two particular files: `statuses.txt` and `project.types.json`.
 
-### `project.types.json` file
+### About `project.types.json` file
 
 Let's start with `project.types.json`. It's the main file for your project's info detection.
 `project.types.info` structure example: 
@@ -51,7 +51,7 @@ You have downloaded `.xlsx` document with all your tasks' types in your project,
 
 ![image](https://user-images.githubusercontent.com/60508001/181576713-f5a489b2-b827-4c68-9baa-44360ad35721.png)
 
-### `statuses.txt` file.
+### About `statuses.txt` file.
 
 Firstly, you sould create `statuses.txt` file in the project's root.
 `statuses.txt` structure:
