@@ -1,7 +1,7 @@
 # Pleasure-Tool
 ### Tool which will save you a huge amount of time that you could spend on yourself or somewhere else!
 
-Before using it, please follow the following steps:
+Before using it, please follow the steps:
  - Clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`.
  - Run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not - just run: `npm i -g pnpm`).
  
@@ -9,7 +9,7 @@ Before using it, please follow the following steps:
 
 This tool need two particular files: `statuses.txt` and `project.types.json`.
 
-Let's start with `project.types.json`. It's main file for detect your project info.
+Let's start with `project.types.json`. It's the main file for detection of your project info.
 `project.types.info` structure example: 
 ```json
 {
@@ -32,7 +32,7 @@ Key  | Description
 key: `string` |  Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)
 min: `number`  |  The minimum time that will be spent to complete the task (0 by default)
 max: `number` |  The maximum time that will be spent to complete the task (you can specify your default time here by yourself)
-wildcard: `string[]` |  Array of string that should be match by your task
+wildcard: `string[]` |  Array of strings (keywords) to determine which type your task is of.
 
 Let's investigate the first object inside `project.types.json`, because other objects will be almost the same.
 
