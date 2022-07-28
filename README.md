@@ -9,7 +9,7 @@ Before using it, please follow the steps:
 
 This tool need two particular files: `statuses.txt` and `project.types.json`.
 
-Let's start with `project.types.json`. It's the main file for detection of your project info.
+Let's start with `project.types.json`. It's the main file for your project's info detection.
 `project.types.info` structure example: 
 ```json
 {
@@ -36,7 +36,7 @@ wildcard: `string[]` |  Array of strings (keywords) to determine which type your
 
 Let's investigate the first object inside `project.types.json`, because other objects will be almost the same.
 
-`PBI Desktop, Build and Accessibility.Development` and others it's a taskname of our project, but where can I receive them? It's either than it looks!
+`PBI Desktop, Build and Accessibility.Development` (and the others) - is a taskname of our project, but where can I receive them? It's either than it looks!
 
 1. Go to [Akvelon ETS](https://ets.akvelon.net/)
 2. Sign in and then:
@@ -45,32 +45,32 @@ Let's investigate the first object inside `project.types.json`, because other ob
 
 ![image](https://user-images.githubusercontent.com/60508001/181575987-85f89a37-0dc7-4752-9302-71e1159b69dd.png)
 
-You have downloaded `.xlsx` document with all your tasks and project, just open it and you'll see all your tasks on your project. Then just copy your project tasks to `project.types.json` and they will be your `key` in this object.
+You have downloaded `.xlsx` document with all your tasks and project, just open it and you'll see all your tasks at your project's tab. Then just copy your project tasks to `project.types.json` and each of them will be your `key` in this object.
 
 ![image](https://user-images.githubusercontent.com/60508001/181576713-f5a489b2-b827-4c68-9baa-44360ad35721.png)
 
 ### About `statuses.txt` file.
 
-Firstly, you sould make `statuses.txt` file in the root of project.
+Firstly, you sould create `statuses.txt` file in the project's root.
 `statuses.txt` structure:
 
 ```
 {month}/{date}/{year}
- - Investigated in something
+ - Investigated something
  - Implemented something
  - Participated in something
  - Tested something
 ===
 7/19/2022
- - Investigated in something
+ - Investigated something
  - Implemented something
  - Participated in something
  - Tested something
 ```
 
-- Each of your statuses must starting with Date and make sure that you have properly date format (For instance: `7/30/2022` or `7-30-2022`, `{month}/{date}/{year}`)
-- Each of your status must be include a separator: ```===```
+- Each of your statuses must start with Date and make sure that you have proper date format (For instance: `7/30/2022` or `7-30-2022`, `{month}/{date}/{year}`)
+- Each of your status must include a separator: ```===```
 
-### As soon all previous steps was completed you can run: `pnpm build` in the root folder.
+### As soon as all previous steps are completed you need to run: `pnpm build` in the root folder.
 
-After that `Reports.xlsx` file will be appear. Enjoy!
+After that `Reports.xlsx` file will appear. Enjoy!
