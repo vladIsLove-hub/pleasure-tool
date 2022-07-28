@@ -26,7 +26,7 @@ Let's start with `project.types.json`. It's the main file where tasks of your pr
     "{key}": {
         "min": {min_value},
         "max": {max_value},
-        "wildcard": ["first_keyword", "second_keyword", ...]
+        "wildcard": ["{first_keyword}", "{second_keyword}", ...]
     },
     ...
 }
