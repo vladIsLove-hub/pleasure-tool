@@ -21,11 +21,17 @@ This tool needs two particular files: `statuses.txt` and `project.types.json`.
 Let's start with `project.types.json`. It's the main file where tasks of your project are described.
 `project.types.info` structure: 
 
+But what happens if you need to have a `` ` `` in your escaped text?
+
+To use Mermaid delimit your code with a `` ```mermaid`` block
+
+A generic looks like this: ``CustomList<`1>``
+
 ```json
 {
     "{key}": {
-        "min": {min},
-        "max": {max},
+        "min": "{min_value}",
+        "max": "{max_value}",
         "wildcard": ["{first_keyword}", "{second_keyword}", ...]
     },
     ...
