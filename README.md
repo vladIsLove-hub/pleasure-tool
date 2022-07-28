@@ -58,18 +58,28 @@ Firstly, you sould create `statuses.txt` file in the project's root.
 
 ```
 {month}/{date}/{year}
+ - {first_task_description}
+ - {second_task_description}
+...
+```
+
+Example:
+
+```
+7/19/2022
  - Investigated something
  - Implemented something
  - Participated in something
  - Tested something
-===
-7/19/2022
+ ===
+ 7/20/2022
  - Investigated something
  - Implemented something
  - Participated in something
  - Tested something
 ```
 
+You as a users need to follow these 2 rules:
 - Each of your statuses must start with Date and make sure that you have proper date format (For instance: `7/30/2022` or `7-30-2022`, `{month}/{date}/{year}`)
 - Each of your status must include a separator: ```===```
 
