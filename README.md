@@ -34,20 +34,20 @@ Key  | Description
 key: `string` |  Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)
 min: `number`  |  The minimum time that will be spent to complete the task (0 by default)
 max: `number` |  The maximum time that will be spent to complete the task (you can specify your default time here by yourself)
-wildcard: `string[]` |  Array of strings (keywords) to determine which type your task is of.
+wildcard: `string[]` |  Array of strings (keywords) which match specific project type.
 
 Let's investigate the first object inside `project.types.json`, because other objects will be almost the same.
 
-`PBI Desktop, Build and Accessibility.Development` (and the others) - is a taskname of our project, but where can I receive them? It's either than it looks!
+`PBI Desktop, Build and Accessibility.Development` (and the others) - is a taskname of our project, but where can I receive it? It's easier than it looks!
 
 1. Go to [Akvelon ETS](https://ets.akvelon.net/)
-2. Sign in and then:
+2. Sign in and then click `Download import template` in the dropdown menu:
 
 ![image](https://user-images.githubusercontent.com/60508001/181575828-a4cf3adc-3c49-489a-a99c-60398b90d109.png)
 
 ![image](https://user-images.githubusercontent.com/60508001/181575987-85f89a37-0dc7-4752-9302-71e1159b69dd.png)
 
-You have downloaded `.xlsx` document with all your tasks' types in your project, just open it and you'll see all your tasks's types in the `Projects` tab. Then just copy your project tasks's types to `project.types.json` and each of them will be the `key` in this object.
+After downloading `.xlsx` document, open it with Excel and you'll see all your tasks's types in the `Projects` tab. Then copy your project tasks's types to `project.types.json` and each of them will be the `key`.
 
 ![image](https://user-images.githubusercontent.com/60508001/181576713-f5a489b2-b827-4c68-9baa-44360ad35721.png)
 
