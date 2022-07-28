@@ -3,11 +3,13 @@
 
 Before using it, please follow the steps:
  - Clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`.
- - Run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not - just run: `npm i -g pnpm`).
+ - Run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not just run: `npm i -g pnpm`).
  
 ### How to use it?
 
 This tool need two particular files: `statuses.txt` and `project.types.json`.
+
+### `project.types.json` file
 
 Let's start with `project.types.json`. It's the main file for your project's info detection.
 `project.types.info` structure example: 
@@ -45,11 +47,11 @@ Let's investigate the first object inside `project.types.json`, because other ob
 
 ![image](https://user-images.githubusercontent.com/60508001/181575987-85f89a37-0dc7-4752-9302-71e1159b69dd.png)
 
-You have downloaded `.xlsx` document with all your tasks and project, just open it and you'll see all your tasks at your project's tab. Then just copy your project tasks to `project.types.json` and each of them will be your `key` in this object.
+You have downloaded `.xlsx` document with all your tasks' types in your project, just open it and you'll see all your tasks's types in the `Projects` tab. Then just copy your project tasks's types to `project.types.json` and each of them will be the `key` in this object.
 
 ![image](https://user-images.githubusercontent.com/60508001/181576713-f5a489b2-b827-4c68-9baa-44360ad35721.png)
 
-### About `statuses.txt` file.
+### `statuses.txt` file.
 
 Firstly, you sould create `statuses.txt` file in the project's root.
 `statuses.txt` structure:
