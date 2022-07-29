@@ -1,4 +1,5 @@
 import excel from 'excel4node';
+import path from 'path';
 
 class ExcelGenerator {
   constructor(excel) {
@@ -10,6 +11,7 @@ class ExcelGenerator {
         size: 14,
       },
     });
+    this.reportName = this.getReportName();
   }
 
   async generate(rowReports) {
@@ -26,7 +28,7 @@ class ExcelGenerator {
       rowIndex++;
     }
   
-    this.workbook.write('../Reports.xlsx');
+    this.workbook.write(this.reportName);
   }
 
   async createDefaultHeaders() {
@@ -35,6 +37,21 @@ class ExcelGenerator {
     this.worksheet.cell(2, 2).string('Effort').style(this.styles);
     this.worksheet.cell(2, 3).string('Description').style(this.styles);
     this.worksheet.cell(2, 4).string('Date').style(this.styles);
+  }
+
+  getReportName() {
+    let passedReportName = process.argv[2];
+    const defaultReportName = '../Reports.xlsx';
+    if (passedReportName === '%npm_config_name%') {
+      return defaultReportName;
+    } else {
+      const extName = path.extname(passedReportName)
+      if (extName) {
+        passedReportName = passedReportName.replace(extName, '');
+      }
+
+      return `../${passedReportName}.xlsx`;
+    }
   }
 }
 
