@@ -1,4 +1,4 @@
-# Pleasure-Tool `(2.0.0)`
+# Pleasure-Tool `(2.1.0)`
 
 ### What is it
 
@@ -111,7 +111,7 @@ Two rules must be followed while creating `statuses.txt`:
 
 ### Excel time report file generation 
 
-As soon as all previous steps are completed you need to run: `pnpm build` in the root folder.
+As soon as all previous steps are completed you need to run: `pnpm start` in the root folder.
 
 After that `Reports.xlsx` file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality. 
 
