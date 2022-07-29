@@ -1,4 +1,3 @@
-import './excel';
 import excel from 'excel4node';
 
 class ExcelGenerator {

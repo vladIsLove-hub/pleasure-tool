@@ -4,7 +4,7 @@
   "description": "Tool which will save you a huge amount of time that you could spend in minecraft or somewhere else",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && cd ./lib && node index.js"
+    "build": "node esbuild.file.js && cd ./lib && node bundle.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   "homepage": "https://github.com/vladIsLove-hub/pleasure-tool#readme",
   "dependencies": {
     "chalk": "4.1.2",
+    "esbuild": "^0.14.51",
     "excel4node": "^1.7.2"
   },
   "devDependencies": {
