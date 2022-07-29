@@ -1,4 +1,4 @@
-# Pleasure-Tool
+# Pleasure-Tool `(2.0.0)`
 
 ### What is it
 
