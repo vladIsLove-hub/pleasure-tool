@@ -67,7 +67,7 @@ Let's investigate the first object inside `project.types.json`, because other ob
 
 ![image](https://user-images.githubusercontent.com/60508001/181575987-85f89a37-0dc7-4752-9302-71e1159b69dd.png)
 
-After downloading `.xlsx` document, open it with Excel and you'll see all your tasks's types in the `Projects` tab. Then copy your project tasks's types to `project.types.json` and each of them will be the `key`.
+After downloading `.xlsx` document, open it with Excel and you'll see all your tasknames in the `Projects` tab. Then copy your project tasknames to `project.types.json` and each of them will be the `key`.
 
 ![image](https://user-images.githubusercontent.com/60508001/181576713-f5a489b2-b827-4c68-9baa-44360ad35721.png)
 
@@ -112,6 +112,8 @@ Two rules must be followed while creating `statuses.txt`:
 ### Excel time report file generation 
 
 As soon as all previous steps are completed you need to run: `pnpm start` in the root folder.
+
+- **Experimental feature**: you can pass custom filename for report as optional `name` argument using command `pnpm start`. F.e. `pnpm start --name="MyReport.xlsx"`. File extension `.xlsx` will be added automatically to filename if not provided explicitly.
 
 After that `Reports.xlsx` file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality. 
 
