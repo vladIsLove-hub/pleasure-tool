@@ -1,7 +1,7 @@
 {
   "name": "pleasure-tool",
-  "version": "1.0.0",
-  "description": "Tool which will save you a huge amount of time that you could spend in minecraft or somewhere else",
+  "version": "2.0.0",
+  "description": "Tool which will save you a huge amount of time that you could spend on yourself or something else!",
   "main": "index.js",
   "scripts": {
     "build": "node esbuild.file.js && cd ./lib && node bundle.js"
