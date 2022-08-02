@@ -42,7 +42,8 @@ class ExcelGenerator {
   getReportName() {
     let passedReportName = process.argv[2];
     const defaultReportName = '../Reports.xlsx';
-    if (passedReportName === '%npm_config_name%') {
+
+    if (!passedReportName || passedReportName === '%npm_config_name%') {
       return defaultReportName;
     } else {
       const extName = path.extname(passedReportName)
