@@ -118,8 +118,8 @@ Example:
  - Implemented functionality for task 1
  - Participated in meeting
  - Tested changes for task 1
- ===
- 7/20/2022
+===
+7/20/2022
  - Investigated task 2
  - Investigated more in task 2
  - Participated in meeting
