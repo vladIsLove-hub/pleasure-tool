@@ -20,7 +20,6 @@
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
 
     /* Type Checking */
-    "checkJs": true,
     "allowJs": true,
     "strict": true,                                      /* Enable all strict type-checking options. */
     "noImplicitAny": false,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */

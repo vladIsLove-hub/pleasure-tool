@@ -8,5 +8,4 @@ build({
   outfile: './lib/bundle.js',
   loader: {".ts": "ts"}
 })
-.then(() => console.log(chalk.bold.green("Build finished successfully")))
 .catch((e) => console.error(e.message));

@@ -1,0 +1,20 @@
+{
+    "overwork": {
+        "question": "How much overwork percentage do you prefer?",
+        "defaultValue": 0,
+        "type": "number",
+        "constraints": {
+            "min": 0,
+            "max": 20
+        }
+    },
+    "reportName": {
+        "question": "You can set your own report filename",
+        "defaultValue": "Report.xlsx",
+        "type": "string",
+        "constraints": {
+            "min": 0,
+            "max": 20
+        }
+    }
+}

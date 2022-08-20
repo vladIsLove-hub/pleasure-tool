@@ -23,7 +23,7 @@ export default class Parser implements IParser {
         const statusesFileContent = await this.getStatusesFileContent();
 
         if (!statusesFileContent) {
-            this.logger.error('Statuses file is empty. Please read README.md');
+            this.logger.error('Statuses file is empty. Read README.md');
         }
 
         const statuses: IStatus[] = statusesFileContent

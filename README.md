@@ -1,4 +1,4 @@
-# Pleasure-Tool `(2.1.1)`
+# Pleasure-Tool `(2.2.1)`
 
 ### What is it
 
@@ -8,7 +8,7 @@ Tool which will save you a huge amount of time that you could spend on yourself 
 
 It generates excel time report file, based on your daily text statuses. 
 
-Before using it, please follow the steps:
+Before using it, follow the steps:
  - clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`;
  - run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not just run: `npm i -g pnpm`).
  

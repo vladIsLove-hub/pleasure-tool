@@ -1,8 +1,8 @@
-import excel from 'excel4node';
+import chalk from 'chalk';
 import path from 'path';
-
+import storeCLI from '../store-cli/StoreCLI';
 class ExcelGenerator {
-  constructor(excel) {
+  constructor(excel, logger, promisify) {
     this.excel = excel;
     this.workbook = new excel.Workbook();
     this.worksheet = this.workbook.addWorksheet('Reports');
@@ -11,7 +11,10 @@ class ExcelGenerator {
         size: 14,
       },
     });
-    this.reportName = this.getReportName();
+    this.reportName;
+    this.logger = logger;
+    this.promisify = promisify;
+    this.setReportName();
   }
 
   async generate(rowReports) {
@@ -27,8 +30,16 @@ class ExcelGenerator {
       this.worksheet.cell(rowIndex, 4).date(currentDate).style(this.styles);
       rowIndex++;
     }
-  
-    this.workbook.write(this.reportName);
+
+    const excelWriteAsync = await this.promisify.promisifyExcelWrite(this.workbook.write.bind(this.workbook));
+
+    try {
+      await excelWriteAsync(this.reportName);
+    } catch (e) {
+      this.logger.error(e);
+    }
+
+    this.logger.success(`The excel file was generated successfully with the name: ${path.basename(this.reportName)}`)
   }
 
   async createDefaultHeaders() {
@@ -39,20 +50,21 @@ class ExcelGenerator {
     this.worksheet.cell(2, 4).string('Date').style(this.styles);
   }
 
-  getReportName() {
-    let passedReportName = process.argv[2];
-    const defaultReportName = '../Reports.xlsx';
-    if (passedReportName === '%npm_config_name%') {
-      return defaultReportName;
-    } else {
-      const extName = path.extname(passedReportName)
-      if (extName) {
-        passedReportName = passedReportName.replace(extName, '');
+  setReportName() {
+    storeCLI.getStore().then(storeItems => {
+      let cliReportNameOption = storeItems.find(cliOption => cliOption.optionName === 'reportName');
+      if (!cliReportNameOption) {
+        this.logger.error('reportName CLI option was not provided. Check out README.md');
+      } else {
+        let reportName = String(cliReportNameOption.answer);
+        const extName = path.extname(reportName);
+        if (extName) {
+          reportName = reportName.replace(extName, '');
+        }
+        this.reportName = `../${reportName}.xlsx`;
       }
-
-      return `../${passedReportName}.xlsx`;
-    }
+    })
   }
 }
 
-export default new ExcelGenerator(excel);
+export default ExcelGenerator;

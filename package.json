@@ -1,12 +1,12 @@
 {
   "name": "pleasure-tool",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "Tool which will save you a huge amount of time that you could spend on yourself or something else!",
   "main": "index.js",
   "scripts": {
     "build": "node esbuild.file.js && cd ./lib && node bundle.js",
-    "clean": "powershell ./removeBundleDir.ps1",
-    "start": "pnpm build %npm_config_name% && pnpm clean"
+    "clean": "node ./removeBundleDir.js",
+    "start": "pnpm build && pnpm clean"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
-    "@types/node": "^18.0.0",
+    "@types/node": "^18.7.4",
     "prettier": "^2.7.1"
   }
 }

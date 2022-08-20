@@ -18,13 +18,13 @@ class ReportValidator implements IReportValidator{
 
   public validateProjectTypesConfig(projectTypes: any): void {
     if (!projectTypes || Array.isArray(projectTypes) || Object.keys(projectTypes).length === 0) {
-      this.logger.error(`Wrong <project.types.json> config format. Please read README.md`);
+      this.logger.error(`Wrong <project.types.json> config format. Read README.md`);
     }
 
     for (let key in projectTypes) {
       const typeInfo = projectTypes[key];
       if (!('min' in typeInfo) || !('max' in typeInfo) || !('wildcard' in typeInfo)) {
-        this.logger.error(`Wrong <project.types.json> config format, for project type: ${key}. Please read README.md`);
+        this.logger.error(`Wrong <project.types.json> config format, for project type: ${key}. Read README.md`);
       }
 
       if (!this.isNumber(typeInfo['min']) || !this.isNumber(typeInfo['max'])) {

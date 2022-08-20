@@ -23,12 +23,16 @@ class Logger implements ILogger {
     this.error(
       `Wrong <project.types.json> config format, for project type: ${key} \n`
       + `${errMessage}`
-      + `Please read README.md`
+      + `Read README.md`
     );
   }
 
   public warn(warning: string): void {
     console.log('\n', chalk.bold.yellow('WARNING: '), warning, '\n')
+  }
+
+  public success(msg: string): void {
+    console.log('\n', chalk.bold.green(msg), '\n');
   }
 }
 

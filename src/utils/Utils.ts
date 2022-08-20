@@ -28,12 +28,10 @@ class Utils implements IUtils {
 
     let tasksTotalTime: number = taskList.reduce((acc, task) => acc += task.time, 0);
 
-    let description: string;
     if (tasksTotalTime > expectedTimeInHours) {
       while (true) {
         if (expectedTimeInHours === tasksTotalTime) break;
         const task = await getTaskWithMaxTime(taskList);
-        description = task.description;
         task.time -= timeUnitInHours;
         tasksTotalTime -= timeUnitInHours;
       }
