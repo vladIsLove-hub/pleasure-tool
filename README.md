@@ -6,7 +6,7 @@ Tool which will save you a huge amount of time that you could spend on yourself 
 
 ### What it does
 
-It generates excel time report file, based on your daily text statuses. 
+It generates excel time report file, based on your daily text statuses.
 
 Before using it, follow the steps:
  - clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`;
@@ -19,7 +19,7 @@ This tool needs two particular files: `statuses.txt` and `project.types.json`.
 ### About `project.types.json` file
 
 Let's start with `project.types.json`. It's the main file where tasks of your project are described.
-`project.types.info` structure: 
+`project.types.info` structure:
 
 ```json5
 {
@@ -32,12 +32,12 @@ Let's start with `project.types.json`. It's the main file where tasks of your pr
 }
 ```
 
-Value  |  Type  |  Description
---- | --- | -------------
-key | `string` |  Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)
-min_value | `number`  |  The minimum time that will be spent to complete the task (0 by default)
-max_value | `number` |  The maximum time that will be spent to complete the task (you can specify your default time here by yourself)
-[first_keyword, second_keyword, ...] | `string[]` |  Non-empty array of keywords which match specific project taskname.
+| Value                                | Type       | Description                                                                                                   |
+| ------------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------- |
+| key                                  | `string`   | Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)                       |
+| min_value                            | `number`   | The minimum time that will be spent to complete the task (0 by default)                                       |
+| max_value                            | `number`   | The maximum time that will be spent to complete the task (you can specify your default time here by yourself) |
+| [first_keyword, second_keyword, ...] | `string[]` | Non-empty array of keywords which match specific project taskname.                                            |
 
 Example:
 
@@ -46,12 +46,31 @@ Example:
     "PBI Desktop, Build and Accessibility.Development": {
         "min": 0,
         "max": 3,
-        "wildcard": ["update", "updating", "create", "creating", "develop", "implement", "change", "refactor", "rewriting", "rewrote", "resolve", "resolving"]
+        "wildcard": [
+            "update",
+            "updating",
+            "create",
+            "creating",
+            "develop",
+            "implement",
+            "change",
+            "refactor",
+            "rewriting",
+            "rewrote",
+            "resolve",
+            "resolving"
+        ]
     },
     "PBI Desktop, Build and Accessibility.Investigation": {
         "min": 0,
         "max": 3,
-        "wildcard": ["investigate", "investigating", "investigation", "debug", "research"]
+        "wildcard": [
+            "investigate",
+            "investigating",
+            "investigation",
+            "debug",
+            "research"
+        ]
     }
 }
 ```
@@ -98,23 +117,24 @@ Example:
  - Implemented functionality for task 1
  - Participated in meeting
  - Tested changes for task 1
- ===
- 7/20/2022
+===
+7/20/2022
  - Investigated task 2
  - Investigated more in task 2
  - Participated in meeting
 ```
 
 Two rules must be followed while creating `statuses.txt`:
-- each of your statuses must start with date written in correct date format (For instance: `7/30/2022` or `7-30-2022`). Slashes and dashed are supported as delimiters between `{month}` `{date}` and `{year}`, so formats `{month}/{date}/{year}` and `{month}-{date}-{year}` are supported;
-- each of your statuses must a separator ```===``` following it, except the last status.
 
-### Excel time report file generation 
+-   each of your statuses must start with date written in correct date format (For instance: `7/30/2022` or `7-30-2022`). Slashes and dashed are supported as delimiters between `{month}` `{date}` and `{year}`, so formats `{month}/{date}/{year}` and `{month}-{date}-{year}` are supported;
+-   each of your statuses must a separator `===` following it, except the last status.
+
+### Excel time report file generation
 
 As soon as all previous steps are completed you need to run: `pnpm start` in the root folder.
 
-- **Experimental feature**: you can pass custom filename for report as optional `name` argument using command `pnpm start`. F.e. `pnpm start --name="MyReport.xlsx"`. File extension `.xlsx` will be added automatically to filename if not provided explicitly.
+-   **Experimental feature**: you can pass custom filename for report as optional `name` argument using command `pnpm start`. F.e. `pnpm start --name="MyReport.xlsx"`. File extension `.xlsx` will be added automatically to filename if not provided explicitly.
 
-After that `Reports.xlsx` file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality. 
+After that `Reports.xlsx` file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality.
 
 Enjoy!
