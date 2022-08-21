@@ -48,11 +48,11 @@ class ReadlineValidator implements IReadlineValidator {
     }
 }
 
-class ReadlineCLIValidatorValidator extends ReadlineValidator implements IReadlineCLIOptionsValidator {
+class ReadlineCLIJSONValidator extends ReadlineValidator implements IReadlineCLIOptionsValidator {
     static requiredParameters = ['question', 'defaultValue', 'constraints', 'type']
     public async validateCLIOptions(): Promise<void> {
         for (const cliOption of Object.values(defaultCliOptions)) {
-            for (const parameterName of ReadlineCLIValidatorValidator.requiredParameters) {
+            for (const parameterName of ReadlineCLIJSONValidator.requiredParameters) {
                 if (!(parameterName in cliOption))
                     this.logger.error(`<${parameterName}> parameter was not provided in the default.cli-options.json`);
             }
@@ -66,6 +66,6 @@ class ReadlineCLIValidatorValidator extends ReadlineValidator implements IReadli
 }
 
 const rlValidator = new ReadlineValidator(logger);
-const rlCliOptionsValidator = new ReadlineCLIValidatorValidator(logger);
+const rlCliOptionsValidator = new ReadlineCLIJSONValidator(logger);
 
 export { rlValidator, rlCliOptionsValidator };
