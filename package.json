@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node esbuild.file.js && cd ./lib && node bundle.js",
     "clean": "node ./removeBundleDir.js",
-    "start": "pnpm build && pnpm clean"
+    "start": "pnpm build && pnpm clean",
+    "debug": "tsc && cd ./lib && node index.js && cd ../ && pnpm clean"
   },
   "repository": {
     "type": "git",
