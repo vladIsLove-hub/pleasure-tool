@@ -15,13 +15,14 @@ class ReadlineValidator implements IReadlineValidator {
             switch (type) {
                 case 'number':
                     {
-                        const { min, max } = constraints;
+                        const { format } = constraints;
                         serializedAnswer = Number(serializedAnswer);
                         if (Number.isNaN(serializedAnswer)) {
                             reject(new Error(`${optionName} value must be numeric`));
                         }
-                        if (serializedAnswer > max || serializedAnswer < min)
-                            reject(new RangeError(`${optionName} value must be in range from ${min} to ${max}`));
+                        const isCorrectFormat = format.find(item => item === serializedAnswer);
+                        if (!isCorrectFormat)
+                            reject(new RangeError(`${optionName} value must be one of the following options: ${format.join(' | ')}`));
                         resolve();
                         break;
                     }
@@ -41,7 +42,7 @@ class ReadlineValidator implements IReadlineValidator {
     private async getSerializeFunc(type: string): Promise<(arg: string) => string | number> {
         const serializeFuncs = {
             string: (s: string) => s.toString(),
-            number: (n: string) => parseInt(n),
+            number: (n: string) => parseFloat(n),
         }
 
         return serializeFuncs[type];
@@ -49,18 +50,33 @@ class ReadlineValidator implements IReadlineValidator {
 }
 
 class ReadlineCLIJSONValidator extends ReadlineValidator implements IReadlineCLIOptionsValidator {
-    static requiredParameters = ['question', 'defaultValue', 'constraints', 'type']
+    static requiredParameters = ['question', 'defaultValue', 'constraints', 'type'];
     public async validateCLIOptions(): Promise<void> {
         for (const cliOption of Object.values(defaultCliOptions)) {
             for (const parameterName of ReadlineCLIJSONValidator.requiredParameters) {
                 if (!(parameterName in cliOption))
                     this.logger.error(`<${parameterName}> parameter was not provided in the default.cli-options.json`);
             }
-            const { constraints: { min, max } } = cliOption;
-            if (min === undefined || max === undefined)
-                this.logger.error('<constraints: min or max> parameter was not provided in the default.cli-options.json');
-            if (typeof min !== 'number' || typeof max !== 'number')
-                this.logger.error('<constraints: min or max> parameter must be a type number');
+            const { min, max, format } = JSON.parse(JSON.stringify(cliOption.constraints));
+
+            if (min && max && format === undefined) {
+                if (min === undefined || max === undefined)
+                    this.logger.error('<constraints: min or max> parameter was not provided in the default.cli-options.json');
+                if (typeof min !== 'number' || typeof max !== 'number')
+                    this.logger.error('<constraints: min or max> parameter must be a type number');
+            } 
+
+            if (format && max === undefined && min === undefined) {
+                if (!Array.isArray(format)) {
+                    this.logger.error('<constraints: format> parameter must be an array');
+                }
+
+                for (const item of format) {
+                    if (typeof item !== cliOption.type) {
+                        this.logger.error(`<constraints: format> parameter must be a ${cliOption.type} array`)
+                    }
+                }
+            }
         }
     }
 }

@@ -4,8 +4,7 @@
         "defaultValue": 0,
         "type": "number",
         "constraints": {
-            "min": 0,
-            "max": 20
+            "format": [0, 5, 10]
         }
     },
     "reportName": {

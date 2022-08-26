@@ -1,8 +1,8 @@
-lockfileVersion: 5.4
+lockfileVersion: 5.3
 
 specifiers:
   '@types/chalk': ^2.2.0
-  '@types/node': 18.7.4
+  '@types/node': ^18.7.4
   chalk: 4.1.2
   esbuild: ^0.14.51
   excel4node: ^1.7.2

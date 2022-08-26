@@ -10,6 +10,7 @@ import logger from '../logger/Logger';
 import { IReportValidator } from "./types/reportValidator.types";
 import reportValidator from './ReportValidator';
 import chalk from "chalk";
+import storeCLI from "../store-cli/StoreCLI";
 
 class ReportGenerator implements IReportGenerator {
   private projectTypes: ProjectTypes;
@@ -23,11 +24,45 @@ class ReportGenerator implements IReportGenerator {
   }
 
   public async generateRowReports(statuses: IStatus[]): Promise<IRowReport[]> {
+    const overworkCliName = 'overwork';
+    const overwork = (await storeCLI.getStore()).find(({ optionName }) => optionName === overworkCliName);
+    let totalTimeInHours;
+    let totalOverworkTimeInTimeUnits;
+
+    if (overwork && overwork.answer) {
+      statuses.sort((a, b) => b.statusText.split('\n').length - a.statusText.split('\n').length);
+      totalTimeInHours = 8 * statuses.length;
+      totalOverworkTimeInTimeUnits = Math.floor((totalTimeInHours * (+overwork.answer / 100)) / 0.25);
+      const accumulatedDashes = statuses.reduce((acc, status) => acc += status.statusText.split('\n').length, 0);
+      const overworkTimes: number[] = [0];
+      for (let i = 0; i < statuses.length; i++) {
+        if (!i) {
+          overworkTimes.push(totalOverworkTimeInTimeUnits * (statuses[i].statusText.split('\n').length / accumulatedDashes));
+        } else {
+          overworkTimes.push(overworkTimes[i] + totalOverworkTimeInTimeUnits * (statuses[i].statusText.split('\n').length / accumulatedDashes))
+        }
+      }
+
+      const roundedOverworkTimes = overworkTimes.map(time => Math.round(time));
+
+      const roundedOverworkTimesResiduals: number[] = [];
+
+      for (let i = 1; i < roundedOverworkTimes.length; i++) {
+        roundedOverworkTimesResiduals.push(roundedOverworkTimes[i] - roundedOverworkTimes[i - 1]);
+      }
+
+      roundedOverworkTimesResiduals.sort((a, b) => b - a);
+
+      for (let i = 0; i < roundedOverworkTimesResiduals.length; i++) {
+        statuses[i].overworkTimeInTimeUnits = roundedOverworkTimesResiduals[i];
+      }
+    }
+
     for (const status of statuses) {
       const { date } = status;
       const taskDescriptions: string[] = await this.getTaskDescriptions(status);
       const tasks: ITask[] = await this.createTasks(taskDescriptions);
-      const normalizedTasks = await this.utils.getNormalizedTasksByEfforts(tasks, date);
+      const normalizedTasks = await this.utils.getNormalizedTasksByEfforts(tasks, date, status.overworkTimeInTimeUnits);
 
       normalizedTasks.forEach((task) => this.rowReports.push({
         date,
@@ -36,6 +71,8 @@ class ReportGenerator implements IReportGenerator {
         reportType: task.type
       }))
     }
+
+    this.rowReports.sort((a, b) => (+new Date(a.date) - +new Date(b.date)));
 
     return this.rowReports;
   }
@@ -90,7 +127,7 @@ class ReportGenerator implements IReportGenerator {
             return type;
           };
         }
-      } 
+      }
     }
   }
 
