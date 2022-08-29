@@ -1,6 +1,6 @@
 {
   "name": "pleasure-tool",
-  "version": "2.2.1",
+  "version": "2.3.1",
   "description": "Tool which will save you a huge amount of time that you could spend on yourself or something else!",
   "main": "index.js",
   "scripts": {
