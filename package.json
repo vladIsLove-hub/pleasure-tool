@@ -19,7 +19,18 @@
     "Automation",
     "Excel"
   ],
-  "author": "Akvelon offshore team",
+  "authors": [
+    {
+      "name": "Aleksandr Miroshnichenko"
+    },
+    {
+      "name": "Vladislav Evtushenko",
+      "email": "vladislovedeveloper@gmail.com",
+      "linkedIn": "https://www.linkedin.com/in/vladislav-evtushenko-303bab1ba/",
+      "telegram": "@vl_creator",
+      "instagram": "vlad_issslove"
+    }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/vladIsLove-hub/pleasure-tool/issues"
