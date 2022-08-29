@@ -21,7 +21,7 @@ class ReadlineValidator implements IReadlineValidator {
                             reject(new Error(`${optionName} value must be numeric`));
                         }
                         const isCorrectFormat = format.find(item => item === serializedAnswer);
-                        if (!isCorrectFormat)
+                        if (isCorrectFormat === undefined)
                             reject(new RangeError(`${optionName} value must be one of the following options: ${format.join(' | ')}`));
                         resolve();
                         break;
