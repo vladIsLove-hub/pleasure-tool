@@ -1,4 +1,9 @@
-# Pleasure-Tool `(2.2.1)`
+# Pleasure-Tool `(2.3.1)`
+
+### <em>What's new in 2.3.1 version:</em>
+ 
+ - We've added support for overwork. Currently we are sapporting overwork for 5 and 10 percents.
+ - Added our custom readline cli module for easy customization
 
 ### What is it
 
@@ -133,8 +138,19 @@ Two rules must be followed while creating `statuses.txt`:
 
 As soon as all previous steps are completed you need to run: `pnpm start` in the root folder.
 
--   **Experimental feature**: you can pass custom filename for report as optional `name` argument using command `pnpm start`. F.e. `pnpm start --name="MyReport.xlsx"`. File extension `.xlsx` will be added automatically to filename if not provided explicitly.
+After you have run `pnpm start` you'll be able to set all the necessary options for your status.
 
-After that `Reports.xlsx` file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality.
+It looks like this: 
+
+![image](https://user-images.githubusercontent.com/60508001/187263439-d7ebce5c-7786-4420-8db2-e4ebe8f9d709.png)
+
+### <em>Notes: </em>
+
+- Currently you can specify only 5 or 10 percents of overwork. (Any other values will be considered are incorrect).
+- You can pass your personal report name. Currently, the report name must not be longer than 20 symbols.
+
+##### <em>If you don't want to set up any options, you can just skip these questions by pressing enter.</em>
+
+After that `Reports.xlsx` (or your custom report name) file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality.
 
 Enjoy!
