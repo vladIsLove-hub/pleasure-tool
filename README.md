@@ -2,8 +2,8 @@
 
 ### <em>What's new in 2.3.1 version:</em>
  
- - We've added support for overwork. Currently we are sapporting overwork for 5 and 10 percents.
- - Added our custom readline cli module for easy customization
+ - We've added support for overwork. Currently, we support overwork for 5 and 10 percent.
+ - Added our custom readline cli module for easy customization.
 
 ### What is it
 
@@ -146,8 +146,8 @@ It looks like this:
 
 ### <em>Notes: </em>
 
-- Currently you can specify only 5 or 10 percents of overwork. (Any other values will be considered are incorrect).
-- You can pass your personal report name. Currently, the report name must not be longer than 20 symbols.
+- Currently you can specify only 5 or 10 percent of overwork. (Any other values will be considered are incorrect).
+- You can pass your personal report filename. Currently, the report filename must be not longer than 20 symbols.
 
 ##### <em>If you don't want to set up any options, you can just skip these questions by pressing enter.</em>
 
