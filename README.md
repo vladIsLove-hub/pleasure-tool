@@ -13,7 +13,13 @@ Tool which will save you a huge amount of time that you could spend on yourself 
 
 It generates excel time report file, based on your daily text statuses.
 
-Before using it, follow the steps:
+### Before using it, follow the steps:
+
+ #### 🛠 Manual setup:
+ 
+  * [NodeJS the latest](https://nodejs.org/en/) or higher.
+  * Install <strong>PNPM</strong>: `npm i -g pnpm`
+  * Install <strong>TypeScript</strong>: `npm i -g typescript`
  - clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`;
  - run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not just run: `npm i -g pnpm`).
  
