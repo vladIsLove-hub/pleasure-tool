@@ -150,10 +150,18 @@ It looks like this:
 
 ![image](https://user-images.githubusercontent.com/60508001/187263439-d7ebce5c-7786-4420-8db2-e4ebe8f9d709.png)
 
-### <em>Notes: </em>
+### <em>Notes:</em>
 
 - Currently you can specify only 5 or 10 percent of overwork. (Any other values will be considered are incorrect).
 - You can pass your personal report filename. Currently, the report filename must be not longer than 20 symbols.
+- You can specify `overwork: "false"` in the `projects.types.json` if you don't want apply overwork to specific tasks
+
+  ```json 
+   "PBI Desktop, Build and Accessibility.Communication": {
+        ...
+        "overwork": false
+   }
+  ```
 
 ##### <em>If you don't want to set up any options, you can just skip these questions by pressing enter.</em>
 
