@@ -29,12 +29,13 @@ export default class Parser implements IParser {
         const statuses: IStatus[] = statusesFileContent
             .split(Parser.STATUS_SEPARATOR)
             .map((status: string) => {
-                const parsedData = status.match(/\d{0,}\/\d{0,}\/\d{0,}/gi)
-                if (!parsedData) {
+                const parsedDate = status.match(/\d{0,}\/\d{0,}\/\d{0,}/gi);
+
+                if (!parsedDate || !parsedDate.length) {
                     this.logger.error(`Wrong date format for the status: \n ${status}`);
                 }
 
-                const dateToValidate = new Date(parsedData![0]);
+                const dateToValidate = new Date(parsedDate![0]);
                 
                 if (!(dateToValidate instanceof Date) || isNaN(<any>dateToValidate)) {
                     this.logger.error(`Wrong date format for the status: \n ${status}`);
@@ -50,7 +51,7 @@ export default class Parser implements IParser {
 
                 return {
                     date,
-                    statusText: status.replace(date, '').trim()
+                    statusText: status.replace(parsedDate![0], '').trim()
                 }
             });
 

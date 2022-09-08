@@ -37,7 +37,6 @@ class Readline implements IReadline {
                         this.logger.warn(e.message);
                     }
                 }
-
             }
             await this.storeCLI.push({ optionName, answer });
         }
