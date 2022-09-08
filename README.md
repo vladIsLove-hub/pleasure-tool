@@ -1,4 +1,9 @@
-# Pleasure-Tool `(2.2.1)`
+# Pleasure-Tool `(2.3.2)`
+
+### <em>What's new in 2.3.2 version:</em>
+ 
+ - We've added support for overwork. Currently, we support overwork for 5 and 10 percent.
+ - Added our custom readline cli module for easy customization.
 
 ### What is it
 
@@ -8,7 +13,13 @@ Tool which will save you a huge amount of time that you could spend on yourself 
 
 It generates excel time report file, based on your daily text statuses.
 
-Before using it, follow the steps:
+### Before using it, follow the steps:
+
+ #### 🛠 Manual setup:
+ 
+  * [NodeJS the latest](https://nodejs.org/en/) or higher.
+  * Install <strong>PNPM</strong>: `npm i -g pnpm`
+  * Install <strong>TypeScript</strong>: `npm i -g typescript`
  - clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`;
  - run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not just run: `npm i -g pnpm`).
  
@@ -133,8 +144,27 @@ Two rules must be followed while creating `statuses.txt`:
 
 As soon as all previous steps are completed you need to run: `pnpm start` in the root folder.
 
--   **Experimental feature**: you can pass custom filename for report as optional `name` argument using command `pnpm start`. F.e. `pnpm start --name="MyReport.xlsx"`. File extension `.xlsx` will be added automatically to filename if not provided explicitly.
+After you have run `pnpm start` you'll be able to set all the necessary options for your status.
 
-After that `Reports.xlsx` file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality.
+It looks like this: 
+
+![image](https://user-images.githubusercontent.com/60508001/187263439-d7ebce5c-7786-4420-8db2-e4ebe8f9d709.png)
+
+### <em>Notes:</em>
+
+- Currently you can specify only 5 or 10 percent of overwork. (Any other values will be considered are incorrect).
+- You can pass your personal report filename. Currently, the report filename must be not longer than 20 symbols.
+- You can specify `overwork: "false"` in the `projects.types.json` if you don't want apply overwork to specific tasks
+
+  ```json5
+   "PBI Desktop, Build and Accessibility.Communication": {
+        ...
+        "overwork": false
+   }
+  ```
+
+##### <em>If you don't want to set up any options, you can just skip these questions by pressing enter.</em>
+
+After that `Reports.xlsx` (or your custom report name) file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality.
 
 Enjoy!
