@@ -11,6 +11,7 @@ import { IReportValidator } from "./types/reportValidator.types";
 import reportValidator from './ReportValidator';
 import chalk from "chalk";
 import storeCLI from "../store-cli/StoreCLI";
+import { compileFunction } from "node:vm";
 
 class ReportGenerator implements IReportGenerator {
   private projectTypes: ProjectTypes;
@@ -120,15 +121,22 @@ class ReportGenerator implements IReportGenerator {
   }
 
   private async getDescriptionType(description: string): Promise<string | void> {
+    let index = 0, resultType;
     for (const [type, typeInfo] of Object.entries(this.projectTypes)) {
       if (typeof typeInfo !== 'string') {
         for (const keyWord of typeInfo.wildcard) {
-          if (description.toLocaleLowerCase().includes(keyWord.toLocaleLowerCase())) {
-            return type;
+          const descriptionLowerCase = description.toLocaleLowerCase();
+          const keyWordLowerCase = keyWord.toLocaleLowerCase();
+          let currentIndex = descriptionLowerCase.indexOf(keyWordLowerCase);
+
+          if (currentIndex !== -1 && (!resultType || currentIndex < index)) {
+            resultType = type;
+            index = currentIndex;
           };
         }
       }
     }
+    return resultType;
   }
 
   private getProjectTypes(): ProjectTypes {

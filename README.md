@@ -1,6 +1,6 @@
-# Pleasure-Tool `(2.3.2)`
+# Pleasure-Tool `(2.3.3)`
 
-### <em>What's new in 2.3.2 version:</em>
+### <em>What's new in 2.3.3 version:</em>
  
  - We've added support for overwork. Currently, we support overwork for 5 and 10 percent.
  - Added our custom readline cli module for easy customization.
