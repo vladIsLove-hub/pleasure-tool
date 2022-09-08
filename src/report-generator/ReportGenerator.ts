@@ -124,7 +124,7 @@ class ReportGenerator implements IReportGenerator {
     let index = 0, resultType;
     for (const [type, typeInfo] of Object.entries(this.projectTypes)) {
       if (typeof typeInfo !== 'string') {
-        for (const keyWord of typeInfo.wildcard) {
+        for (const keyWord of typeInfo.keywords) {
           const descriptionLowerCase = description.toLocaleLowerCase();
           const keyWordLowerCase = keyWord.toLocaleLowerCase();
           let currentIndex = descriptionLowerCase.indexOf(keyWordLowerCase);

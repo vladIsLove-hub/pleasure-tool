@@ -1,6 +1,6 @@
-# Pleasure-Tool `(2.3.3)`
+# Pleasure-Tool `(2.3.4)`
 
-### <em>What's new in 2.3.3 version:</em>
+### <em>What's new in 2.3.4 version:</em>
  
  - We've added support for overwork. Currently, we support overwork for 5 and 10 percent.
  - Added our custom readline cli module for easy customization.
@@ -37,7 +37,7 @@ Let's start with `project.types.json`. It's the main file where tasks of your pr
     "{key}": {
         "min": {min_value},
         "max": {max_value},
-        "wildcard": ["{first_keyword}", "{second_keyword}", ...]
+        "keywords": ["{first_keyword}", "{second_keyword}", ...]
     },
     ...
 }
@@ -57,7 +57,7 @@ Example:
     "PBI Desktop, Build and Accessibility.Development": {
         "min": 0,
         "max": 3,
-        "wildcard": [
+        "keywords": [
             "update",
             "updating",
             "create",
@@ -75,7 +75,7 @@ Example:
     "PBI Desktop, Build and Accessibility.Investigation": {
         "min": 0,
         "max": 3,
-        "wildcard": [
+        "keywords": [
             "investigate",
             "investigating",
             "investigation",

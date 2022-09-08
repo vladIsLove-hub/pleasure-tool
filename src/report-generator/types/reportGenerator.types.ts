@@ -10,6 +10,6 @@ export type ProjectTypes = {
     typeInfo: {
         min: number;
         max: number;
-        wildcard: string[];
+        keywords: string[];
     }
 }
