@@ -1,6 +1,6 @@
-# Pleasure-Tool `(2.3.4)`
+# Pleasure-Tool `(2.3.5)`
 
-### <em>What's new in 2.3.4 version:</em>
+### <em>What's new in 2.3.5 version:</em>
  
  - We've added support for overwork. Currently, we support overwork for 5 and 10 percent.
  - Added our custom readline cli module for easy customization.
@@ -45,7 +45,6 @@ Let's start with `project.types.json`. It's the main file where tasks of your pr
 | Value                                | Type       | Description                                                                                                   |
 | ------------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------- |
 | key                                  | `string`   | Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)                       |
-| min_value                            | `number`   | The minimum time that will be spent to complete the task (0 by default)                                       |
 | max_value                            | `number`   | The maximum time that will be spent to complete the task (you can specify your default time here by yourself) |
 | [first_keyword, second_keyword, ...] | `string[]` | Non-empty array of keywords which match specific project taskname.                                            |
 
@@ -54,7 +53,6 @@ Example:
 ```json
 {
     "PBI Desktop, Build and Accessibility.Development": {
-        "min": 0,
         "max": 3,
         "keywords": [
             "update",
@@ -72,7 +70,6 @@ Example:
         ]
     },
     "PBI Desktop, Build and Accessibility.Investigation": {
-        "min": 0,
         "max": 3,
         "keywords": [
             "investigate",
