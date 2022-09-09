@@ -25,16 +25,16 @@ class ReportValidator implements IReportValidator {
     const uniqueKeywords: { uniqueKey: string; keywords: string[] }[] = [];
     for (let key in projectTypes) {
       const typeInfo = projectTypes[key];
-      if (!('min' in typeInfo) || !('max' in typeInfo) || !('keywords' in typeInfo)) {
+      if (!('max' in typeInfo) || !('keywords' in typeInfo)) {
         this.logger.error(`Wrong <project.types.json> config format, for project type: ${key}. Read README.md`);
       }
 
-      if (!this.isNumber(typeInfo['min']) || !this.isNumber(typeInfo['max'])) {
-        this.logger.wrongFormatError(key, `Field 'min' and 'max' values must be of a number type! \n`);
+      if (!this.isNumber(typeInfo['max'])) {
+        this.logger.wrongFormatError(key, `Value of 'max' field must be of a number type! \n`);
       }
 
-      if (!this.isNotNegative(typeInfo['min']) || !this.isNotNegative(typeInfo['max'])) {
-        this.logger.wrongFormatError(key, `Field 'min' and 'max' values must not be negative! \n`);
+      if (!this.isNotNegative(typeInfo['max'])) {
+        this.logger.wrongFormatError(key, `Value of 'max' field must not be negative! \n`);
       }
 
       if (!Array.isArray(typeInfo['keywords'])) {

@@ -8,7 +8,6 @@ export interface IReportGenerator {
 export type ProjectTypes = {
     type: string;
     typeInfo: {
-        min: number;
         max: number;
         keywords: string[];
     }
