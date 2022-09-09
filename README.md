@@ -35,7 +35,6 @@ Let's start with `project.types.json`. It's the main file where tasks of your pr
 ```json5
 {
     "{key}": {
-        "min": {min_value},
         "max": {max_value},
         "keywords": ["{first_keyword}", "{second_keyword}", ...]
     },
