@@ -2,6 +2,7 @@ import chalk from "chalk";
 import logger from "../logger/Logger";
 import { ILogger } from "../logger/types/logger.types";
 import { IReportValidator } from "./types/reportValidator.types";
+import ProjectTypesFormatError from "../errors/ProjectTypesFormatError";
 
 class ReportValidator implements IReportValidator {
 
@@ -26,7 +27,9 @@ class ReportValidator implements IReportValidator {
     for (let key in projectTypes) {
       const typeInfo = projectTypes[key];
       if (!('max' in typeInfo) || !('keywords' in typeInfo)) {
-        this.logger.error(`Wrong <project.types.json> config format, for project type: ${key}. Read README.md`);
+        // this.logger.log([`Wrong <project.types.json> config format, for project type: ${key}. Read README.md`]);
+        throw new ProjectTypesFormatError(chalk.underline(key));
+
       }
 
       if (!this.isNumber(typeInfo['max'])) {
