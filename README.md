@@ -56,25 +56,15 @@ Example:
         "max": 3,
         "keywords": [
             "update",
-            "updating",
             "create",
-            "creating",
             "develop",
-            "implement",
-            "change",
-            "refactor",
-            "rewriting",
-            "rewrote",
-            "resolve",
-            "resolving"
+            "implement"
         ]
     },
     "PBI Desktop, Build and Accessibility.Investigation": {
         "max": 3,
         "keywords": [
             "investigate",
-            "investigating",
-            "investigation",
             "debug",
             "research"
         ]
