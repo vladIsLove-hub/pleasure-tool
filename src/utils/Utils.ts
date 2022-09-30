@@ -11,30 +11,30 @@ class Utils implements IUtils {
     this.logger = logger;
   }
 
-  public async getNormalizedTasksByEfforts(taskList: ITask[], date: string, overworkTimeInTimeUnits?: number): Promise<ITask[]> {
+  public async getNormalizedTasksByEfforts(tasks: ITask[], date: string, overworkTimeInTimeUnits?: number): Promise<ITask[]> {
     const timeUnitInHours = 0.25;
     const expectedTimeInHours = 8;
 
-    const getTaskWithMaxTime = async (taskList: ITask[]): Promise<ITask> => {
-      let [{ time: currentMaxTime }] = taskList;
-      let [currentTask] = taskList;
-      for (let i = 1; i < taskList.length; i++) {
-        if (currentMaxTime < taskList[i].time) {
-          currentMaxTime = taskList[i].time;
-          currentTask = taskList[i];
+    const getTaskWithMaxTime = async (tasks: ITask[]): Promise<ITask> => {
+      let [{ time: currentMaxTimeInHours }] = tasks;
+      let [currentTask] = tasks;
+      for (let i = 1; i < tasks.length; i++) {
+        if (currentMaxTimeInHours < tasks[i].time) {
+          currentMaxTimeInHours = tasks[i].time;
+          currentTask = tasks[i];
         }
       }
       return currentTask;
     }
 
-    let tasksTotalTime: number = taskList.reduce((acc, task) => acc += task.time, 0);
+    let tasksTotalTimeInHours: number = tasks.reduce((acc, task) => acc += task.time, 0);
 
-    if (tasksTotalTime >= expectedTimeInHours) {
+    if (tasksTotalTimeInHours >= expectedTimeInHours) {
       while (true) {
-        if (expectedTimeInHours === tasksTotalTime) break;
-        const task = await getTaskWithMaxTime(taskList);
+        if (expectedTimeInHours === tasksTotalTimeInHours) break;
+        const task = await getTaskWithMaxTime(tasks);
         task.time -= timeUnitInHours;
-        tasksTotalTime -= timeUnitInHours;
+        tasksTotalTimeInHours -= timeUnitInHours;
       }
     } else {
       this.logger.error(`You must write more fields in your status for date: ${chalk.underline(date)}`);
@@ -42,7 +42,7 @@ class Utils implements IUtils {
 
     if (overworkTimeInTimeUnits) {
       let count = 0;
-      for (const task of taskList) {
+      for (const task of tasks) {
         const projectType = projectTypes[task.type];
         const hasOverwork = 'overwork' in projectType;
         if (hasOverwork && !projectType.overwork) {
@@ -50,27 +50,27 @@ class Utils implements IUtils {
         }
       }
 
-      if (count === taskList.length) {
+      if (count === tasks.length) {
         this.logger.error(`There are no task descriptions for overwork for date: ${chalk.underline(date)}`)
       }
 
-      taskList.sort((a, b) => projectTypes[b.type].max - projectTypes[a.type].max);
+      tasks.sort((a, b) => projectTypes[b.type].max - projectTypes[a.type].max);
 
       let i = 0;
       while (overworkTimeInTimeUnits) {
-        const projectType = projectTypes[taskList[i].type];
+        const projectType = projectTypes[tasks[i].type];
         const hasOverwork = 'overwork' in projectType;
         if (hasOverwork && !projectType.overwork) {
-          i === taskList.length - 1 ? i = 0 : i++;
+          i === tasks.length - 1 ? i = 0 : i++;
           continue;
         }
-        taskList[i].time += timeUnitInHours;
+        tasks[i].time += timeUnitInHours;
         overworkTimeInTimeUnits--;
-        i === taskList.length - 1 ? i = 0 : i++;
+        i === tasks.length - 1 ? i = 0 : i++;
       }
     }
 
-    return taskList;
+    return tasks;
   }
 }
 
