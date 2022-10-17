@@ -1,31 +1,24 @@
 {
   "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig to read more about this file */
-
-    /* Language and Environment */
-    "target": "es2016",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    // "lib": [],                                        /* Specify a set of bundled library declaration files that describe the target runtime environment. */
-    // "jsx": "preserve",    
+    "target": "ES2022",
     "sourceMap": true,
     /* Modules */
-    "module": "CommonJS",                                /* Specify what module code is generated. */
-    "rootDir": ".",                                  /* Specify the root folder within your source files. */
+    "moduleResolution": "node",
+    "module": "node16",
+    "rootDir": ".",
     "resolveJsonModule": true,
     /* Emit */
-    // "outFile": "index.js",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
-    "outDir": "./lib",                                   /* Specify an output folder for all emitted files. */
-
+    "outDir": "./lib",
     /* Interop Constraints */
-    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
-
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     /* Type Checking */
     "allowJs": true,
-    "strict": true,                                      /* Enable all strict type-checking options. */
-    "noImplicitAny": false,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
-    "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
-    "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
-    "alwaysStrict": true,                             /* Ensure 'use strict' is always emitted. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "alwaysStrict": true,
+    "skipLibCheck": false
   },
 }

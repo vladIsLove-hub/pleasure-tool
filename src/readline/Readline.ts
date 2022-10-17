@@ -1,48 +1,40 @@
 import * as readline from 'readline';
 import { stdin as input, stdout as output } from 'node:process';
 import { IReadline } from './types/readline.types';
-import { IStoreCLI } from '../store-cli/types/storeCLI.types';
-import defaultCliOptions from '../../default.cli-options.json';
-import storeCLI from '../store-cli/StoreCLI';
-import chalk from 'chalk';
-import { IReadlineCLIOptionsValidator, IReadlineValidator } from './types/readlineValidator.types';
-import { rlValidator, rlCliOptionsValidator } from './ReadlineValidator';
+import { readlineValidator, readlineCliOptionsValidator } from './ReadlineValidator';
 import { ILogger } from '../logger/types/logger.types';
-import logger from '../logger/Logger';
 import { IPromisify } from '../utils/types/promisify.types';
 import promisify from '../utils/Promisify';
+import logger from '../logger/Logger';
+import pleasureCliOptions from '../../pleasure.readline.json';
+import storeCLI from '../store-cli/StoreCLI';
+import chalk from 'chalk';
 
 class Readline implements IReadline {
-    constructor(
-        private storeCLI: IStoreCLI,
-        private rlValidator: IReadlineValidator,
-        private rlCliOptionsValidator: IReadlineCLIOptionsValidator,
-        private logger: ILogger,
-        private promisify: IPromisify,
-    ) { };
+	constructor(private logger: ILogger, private promisify: IPromisify) { }
 
-    public async read(): Promise<void> {
-        const rl = readline.createInterface({ input, output });
-        const questionAsync = await this.promisify.promisifyReadlineQuestion(rl.question.bind(rl));
-        await this.rlCliOptionsValidator.validateCLIOptions();
-        for (const [optionName, { question, defaultValue }] of Object.entries(defaultCliOptions)) {
-            let answer;
-            while (true) {
-                answer = (await questionAsync(chalk.bold.magenta(`${question} (default: ${defaultValue}): `))) || defaultValue;
-                try {
-                    await this.rlValidator.validate(optionName, answer);
-                    break;
-                } catch (e) {
-                    if (e instanceof Error) {
-                        this.logger.warn(e.message);
-                    }
-                }
-            }
-            await this.storeCLI.push({ optionName, answer });
-        }
+	public async read(): Promise<void> {
+		const rl = readline.createInterface({ input, output });
+		const questionAsync = await this.promisify.promisifyReadlineQuestion(rl.question.bind(rl));
+		await readlineCliOptionsValidator.validate();
+		for (const [optionName, { question, defaultValue }] of Object.entries(pleasureCliOptions)) {
+			let answer;
+			while (true) {
+				answer = (await questionAsync(chalk.bold.magenta(`${question} (default: ${defaultValue}): `))) || defaultValue;
+				try {
+					await readlineValidator.validate(optionName, answer);
+					break;
+				} catch (e) {
+					if (e instanceof Error) {
+						this.logger.warn(e.message);
+					}
+				}
+			}
+			await storeCLI.push({ optionName, answer });
+		}
 
-        rl.close();
-    }
+		rl.close();
+	}
 }
 
-export default new Readline(storeCLI, rlValidator, rlCliOptionsValidator, logger, promisify);
+export default new Readline(logger, promisify);

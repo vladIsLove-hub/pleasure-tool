@@ -1,149 +1,154 @@
 import { IStatus } from "./types/status.types";
-import projectTypesConfig from '../../project.types.json';
-import { IRowReport } from "./types/rowReport.types";
+import { IReport } from "./types/report.types";
 import { ITask } from "./types/task.types";
-import { IReportGenerator, ProjectTypes } from "./types/reportGenerator.types";
-import { IUtils } from "../utils/types/utils.types";
-import utils from '../utils/Utils';
 import { ILogger } from "../logger/types/logger.types";
-import logger from '../logger/Logger';
-import { IReportValidator } from "./types/reportValidator.types";
-import reportValidator from './ReportValidator';
+import { IReportGenerator } from "./types/reportGenerator.types";
+import { IStatusParser } from "../parser/types/parser.types";
+import { StoreCLINames } from "../store-cli/types/storeCLI.types";
+import utils from '../utils/Utils';
 import chalk from "chalk";
 import storeCLI from "../store-cli/StoreCLI";
-import { compileFunction } from "node:vm";
+import config from '../config/pleasure.config';
 
 class ReportGenerator implements IReportGenerator {
-  private projectTypes: ProjectTypes;
-  private rowReports: IRowReport[] = [];
+	private reports: IReport[] = [];
 
-  constructor(private utils: IUtils, private logger: ILogger, private reportValidator: IReportValidator) {
-    this.utils = utils;
-    this.logger = logger;
-    this.reportValidator = reportValidator;
-    this.projectTypes = this.getProjectTypes();
-  }
+	constructor(private statusParser: IStatusParser, private logger: ILogger) {
+		this.logger = logger;
+		this.statusParser = statusParser;
+	}
 
-  public async generateRowReports(statuses: IStatus[]): Promise<IRowReport[]> {
-    const overworkCliName = 'overwork';
-    const overwork = (await storeCLI.getStore()).find(({ optionName }) => optionName === overworkCliName);
-    let totalTimeInHours;
-    let totalOverworkTimeInTimeUnits;
+	public async generate(): Promise<IReport[]> {
+		const statuses: IStatus[] = await this.statusParser.parse();
 
-    if (overwork && overwork.answer) {
-      statuses.sort((a, b) => b.statusText.split('\n').length - a.statusText.split('\n').length);
-      totalTimeInHours = 8 * statuses.length;
-      totalOverworkTimeInTimeUnits = Math.floor((totalTimeInHours * (+overwork.answer / 100)) / 0.25);
-      const accumulatedDashes = statuses.reduce((acc, status) => acc += status.statusText.split('\n').length, 0);
-      const overworkTimes: number[] = [0];
-      for (let i = 0; i < statuses.length; i++) {
-        if (!i) {
-          overworkTimes.push(totalOverworkTimeInTimeUnits * (statuses[i].statusText.split('\n').length / accumulatedDashes));
-        } else {
-          overworkTimes.push(overworkTimes[i] + totalOverworkTimeInTimeUnits * (statuses[i].statusText.split('\n').length / accumulatedDashes))
-        }
-      }
+		this.handleOverworks(statuses);
 
-      const roundedOverworkTimes = overworkTimes.map(time => Math.round(time));
+		for (const status of statuses) {
+			const { date } = status;
+			const taskDescriptions: string[] = await this.getTaskDescriptions(status);
+			const tasks: ITask[] = await this.createTasks(taskDescriptions);
+			const normalizedTasks = await utils.getNormalizedTasksByEfforts(tasks, date, status.overworkTimeInTimeUnits);
 
-      const roundedOverworkTimesResiduals: number[] = [];
+			normalizedTasks.forEach((task) => this.reports.push(
+				{
+					date,
+					description: task.description,
+					effortTime: task.time,
+					reportType: task.type
+				}
+			));
+		}
 
-      for (let i = 1; i < roundedOverworkTimes.length; i++) {
-        roundedOverworkTimesResiduals.push(roundedOverworkTimes[i] - roundedOverworkTimes[i - 1]);
-      }
+		this.reports.sort((a, b) => (Number(new Date(a.date)) - Number(new Date(b.date))));
 
-      roundedOverworkTimesResiduals.sort((a, b) => b - a);
+		return this.reports;
+	}
 
-      for (let i = 0; i < roundedOverworkTimesResiduals.length; i++) {
-        statuses[i].overworkTimeInTimeUnits = roundedOverworkTimesResiduals[i];
-      }
-    }
+	private async getTaskDescriptions(status: IStatus): Promise<string[]> {
+		const { date, statusText } = status;
 
-    for (const status of statuses) {
-      const { date } = status;
-      const taskDescriptions: string[] = await this.getTaskDescriptions(status);
-      const tasks: ITask[] = await this.createTasks(taskDescriptions);
-      const normalizedTasks = await this.utils.getNormalizedTasksByEfforts(tasks, date, status.overworkTimeInTimeUnits);
+		const filteredTaskDescriptions: string[] = statusText
+			.split('\n')
+			.filter((descriptionLine: string) => descriptionLine.length);
 
-      normalizedTasks.forEach((task) => this.rowReports.push({
-        date,
-        description: task.description,
-        effortTime: task.time,
-        reportType: task.type
-      }))
-    }
+		for (const filteredTaskDescription of filteredTaskDescriptions) {
+			if (!filteredTaskDescription.trim().startsWith('-')) {
+				this.logger.error(`Wrong description format for the following date: ${date}. Each description must start with '-'.`)
+			}
+		}
 
-    this.rowReports.sort((a, b) => (+new Date(a.date) - +new Date(b.date)));
-
-    return this.rowReports;
-  }
-
-  private async getTaskDescriptions(status: IStatus): Promise<string[]> {
-    const { date, statusText } = status;
-
-    const filteredTaskDescriptions: string[] = statusText
-      .split('\n')
-      .filter((descriptionLine: string) => descriptionLine.length)
-
-    for (const filteredTaskDescription of filteredTaskDescriptions) {
-      if (!filteredTaskDescription.trim().startsWith('-')) {
-        this.logger.error(`Wrong description format for the following date: ${date}. Each description must start with '-'.`)
-      }
-    }
-
-    if (!filteredTaskDescriptions.length) {
-      this.logger.error(`
+		if (!filteredTaskDescriptions.length) {
+			this.logger.error(`
           No descriptions were found in <statuses.txt> file which start with '-' for the following date: ${date}.
         `);
-    }
+		}
 
-    return filteredTaskDescriptions.map((description: string) => description.replace(/\s{0,}-\s{0,}/, '').replace('\r', ''));
-  }
+		return filteredTaskDescriptions.map((description: string) => description.replace(/\s{0,}-\s{0,}/, '').replace('\r', ''));
+	}
 
-  private async createTasks(taskDescriptions: string[]): Promise<ITask[]> {
-    const tasks: ITask[] = [];
+	private async createTasks(taskDescriptions: string[]): Promise<ITask[]> {
+		const tasks: ITask[] = [];
 
-    for (const taskDescription of taskDescriptions) {
-      const descriptionType: string = await this.getDescriptionType(taskDescription) || '';
+		for (const taskDescription of taskDescriptions) {
+			const descriptionType: string = await this.getDescriptionType(taskDescription) || '';
 
-      if (!descriptionType) {
-        this.logger.error(`No matching description type was found for description type: ${chalk.underline(taskDescription)}`)
-      }
+			if (!descriptionType) {
+				this.logger.error(`No matching description type was found for description type: ${chalk.underline(taskDescription)}`)
+			}
 
-      tasks.push({
-        type: descriptionType,
-        time: this.projectTypes[descriptionType].max,
-        description: taskDescription,
-      })
-    }
+			tasks.push({
+				type: descriptionType,
+				time: config.projectTypes[descriptionType].max,
+				description: taskDescription,
+			})
+		}
 
-    return tasks;
-  }
+		return tasks;
+	}
 
-  private async getDescriptionType(description: string): Promise<string | void> {
-    let index = 0, resultType;
-    for (const [type, typeInfo] of Object.entries(this.projectTypes)) {
-      if (typeof typeInfo !== 'string') {
-        for (const keyWord of typeInfo.keywords) {
-          const descriptionLowerCase = description.toLocaleLowerCase();
-          const keyWordLowerCase = keyWord.toLocaleLowerCase();
-          let currentIndex = descriptionLowerCase.indexOf(keyWordLowerCase);
+	private async handleOverworks(statuses: IStatus[]): Promise<void> {
+		const cliNames: StoreCLINames = await storeCLI.getStoreCLINames();
+		const overworkOption = (await storeCLI.getStore()).find(({ optionName }) => optionName === cliNames.overwork);
 
-          if (currentIndex !== -1 && (!resultType || currentIndex < index)) {
-            resultType = type;
-            index = currentIndex;
-          };
-        }
-      }
-    }
-    return resultType;
-  }
+		if (!overworkOption || !overworkOption.answer) return;
 
-  private getProjectTypes(): ProjectTypes {
-    const projectTypes = JSON.parse(JSON.stringify(projectTypesConfig));
-    this.reportValidator.validateProjectTypesConfig(projectTypes);
-    return projectTypes;
-  }
+		const getLinesAmount = (statusText: string): number => statusText.split('\n').length;
+		const compareByLinesAmountDesc = (a: IStatus, b: IStatus): number => getLinesAmount(b.statusText) - getLinesAmount(a.statusText);
+
+		const totalWorkHoursPerDay = 8;
+		const { timeUnitInHours } = config.times;
+
+		statuses.sort(compareByLinesAmountDesc);
+		const statusesTotalTimeInHours: number = totalWorkHoursPerDay * statuses.length;
+		const overworkPercentage = (Number(overworkOption.answer) / 100);
+		const statusesOverworkTimeInTimeUnits: number = Math.floor((statusesTotalTimeInHours * overworkPercentage) / timeUnitInHours);
+		const statusesDescriptionsAmount: number = statuses.reduce((acc, status) => acc += getLinesAmount(status.statusText), 0);
+		const statusesOverworkTimesInTimeUnits: number[] = [0];
+		for (let i = 0; i < statuses.length; i++) {
+			const statusTextLinesAmount = getLinesAmount(statuses[i].statusText);
+			const statusOverworkTimeInTimeUnits = statusesOverworkTimeInTimeUnits * (statusTextLinesAmount / statusesDescriptionsAmount);
+			if (!i) {
+				statusesOverworkTimesInTimeUnits.push(statusOverworkTimeInTimeUnits);
+			} else {
+				statusesOverworkTimesInTimeUnits.push(statusesOverworkTimesInTimeUnits[i] + statusOverworkTimeInTimeUnits);
+			}
+		}
+
+		const roundedStatusesOverworkTimesInTimeUnits = statusesOverworkTimesInTimeUnits.map(time => Math.round(time));
+
+		const roundedStatusesOverworkTimesInTimeUnitsResiduals: number[] = [];
+
+		for (let i = 1; i < roundedStatusesOverworkTimesInTimeUnits.length; i++) {
+			roundedStatusesOverworkTimesInTimeUnitsResiduals.push(
+				roundedStatusesOverworkTimesInTimeUnits[i] - roundedStatusesOverworkTimesInTimeUnits[i - 1]
+			);
+		}
+
+		roundedStatusesOverworkTimesInTimeUnitsResiduals.sort((a, b) => b - a);
+
+		for (let i = 0; i < roundedStatusesOverworkTimesInTimeUnitsResiduals.length; i++) {
+			statuses[i].overworkTimeInTimeUnits = roundedStatusesOverworkTimesInTimeUnitsResiduals[i];
+		}
+	}
+
+	private async getDescriptionType(description: string): Promise<string | void> {
+		let index = 0, resultType;
+		for (const [type, typeInfo] of Object.entries(config.projectTypes)) {
+			if (typeof typeInfo !== 'string') {
+				for (const keyWord of typeInfo.keywords) {
+					const descriptionLowerCase = description.toLocaleLowerCase();
+					const keyWordLowerCase = keyWord.toLocaleLowerCase();
+					const currentIndex = descriptionLowerCase.indexOf(keyWordLowerCase);
+
+					if (currentIndex !== -1 && (!resultType || currentIndex < index)) {
+						resultType = type;
+						index = currentIndex;
+					}
+				}
+			}
+		}
+		return resultType;
+	}
 }
 
-export default new ReportGenerator(utils, logger, reportValidator);
+export default ReportGenerator;

@@ -1,6 +1,6 @@
 node_modules/
 .vscode
-project.types.json
+pleasure.config.json
 statuses.txt
 lib/
-*.xlsx
+**/*.xlsx

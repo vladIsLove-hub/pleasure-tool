@@ -1,5 +1,5 @@
-import { IRowReport } from "../../report-generator/types/rowReport.types";
+import { IStatus } from "../../report-generator/types/status.types";
 
-export interface IParser {
-    parse: () => Promise<IRowReport[]>
+export interface IStatusParser {
+    parse: () => Promise<IStatus[]>;
 }

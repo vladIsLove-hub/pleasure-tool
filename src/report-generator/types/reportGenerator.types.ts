@@ -1,14 +1,6 @@
-import { IRowReport } from "./rowReport.types";
+import { IReport } from "./report.types";
 import { IStatus } from "./status.types";
 
 export interface IReportGenerator {
-    generateRowReports: (statuses: IStatus[]) => Promise<IRowReport[]>
-}
-
-export type ProjectTypes = {
-    type: string;
-    typeInfo: {
-        max: number;
-        keywords: string[];
-    }
+    generate: (statuses: IStatus[]) => Promise<IReport[]>;
 }

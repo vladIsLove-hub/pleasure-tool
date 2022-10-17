@@ -1,4 +1,4 @@
-export interface IRowReport {
+export interface IReport {
     reportType: string;
     effortTime: number;
     description: string;

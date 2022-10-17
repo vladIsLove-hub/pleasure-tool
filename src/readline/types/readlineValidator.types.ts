@@ -3,5 +3,5 @@ export interface IReadlineValidator {
 }
 
 export interface IReadlineCLIOptionsValidator extends IReadlineValidator {
-    validateCLIOptions: () => Promise<void>;
+    validate: () => Promise<void>;
 }
