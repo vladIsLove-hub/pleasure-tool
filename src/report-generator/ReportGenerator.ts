@@ -21,7 +21,7 @@ class ReportGenerator implements IReportGenerator {
 	public async generate(): Promise<IReport[]> {
 		const statuses: IStatus[] = await this.statusParser.parse();
 
-		this.handleOverworks(statuses);
+		await this.handleOverworks(statuses);
 
 		for (const status of statuses) {
 			const { date } = status;
