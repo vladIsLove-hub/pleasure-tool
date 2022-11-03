@@ -1,78 +1,95 @@
-# Pleasure-Tool `(2.3.5)`
+# Pleasure-Tool (v3.0.1)
 
-### <em>What's new in 2.3.5 version:</em>
+## Motivation: 
+
+All of us know that time is an incredibly important resource that needs to be spent wisely. The current Akvelon reporting (AKVELON ETS) system is quite inefficient and I bet you yourself don't like spending so much time filling out reports. Our solution will help you reduce this time by an average of 30-40%. You just need to write your statuses in one text file.
+As a result our tool generates a .xlsx (Excel) file that needs to be loaded to the [Akvelon ETS](https://ets.akvelon.com/).
+
+## Our powerful features:
  
- - We've added support for overwork. Currently, we support overwork for 5 and 10 percent.
- - Added our custom readline cli module for easy customization.
+ - You'll store all your statuses only in one text file.
+ - You don't need to calculate what time you spend on your tasks, because our flexible system does it by itself based on your parameters.
+ - Finally, you don't need to specify your efforts or task type (Investigation, Development, etc...) every time.
+ - We have overtime support for 10 and 5 percent. All time is calculated automatically based on your daily statuses with the highest precision.
+ - Do not worry if you suddenly do something wrong in your statuses, our tool will tell you where, how and what needs to be corrected in case there are any mistakes in your statuses
 
-### What is it
-
-Tool which will save you a huge amount of time that you could spend on yourself or something else!
-
-### What it does
-
-It generates excel time report file, based on your daily text statuses.
-
-### Before using it, follow the steps:
+## Before using it, follow the steps:
 
  #### 🛠 Manual setup:
  
-  * [NodeJS the latest](https://nodejs.org/en/) or higher.
-  * Install <strong>PNPM</strong>: `npm i -g pnpm`
-  * Install <strong>TypeScript</strong>: `npm i -g typescript`
- - clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`;
- - run `pnpm i` from the root. (Make sure that you have `pnpm` package manager, if not just run: `npm i -g pnpm`).
+  * [NodeJS](https://nodejs.org/en/) 16 or higher.
+  * Install <strong>PNPM</strong> globally: `npm i -g pnpm`
+  * Clone repo: `git clone https://github.com/vladIsLove-hub/pleasure-tool.git`;
+  * Run `pnpm i` from the root.
  
-### How to use
+## How to use it:
 
-This tool needs two particular files: `statuses.txt` and `project.types.json`.
+This tool needs two particular files: `statuses.txt` and `pleasure.config.json`.
 
-### About `project.types.json` file
+### About `pleasure.config.json` file
 
-Let's start with `project.types.json`. It's the main file where tasks of your project are described.
-`project.types.info` structure:
+Let's start with `pleasure.config.json`. It's the main file where tasks of your project are described.
+`pleasure.config.json` structure:
 
 ```json5
 {
-    "{key}": {
-        "max": {max_value},
-        "keywords": ["{first_keyword}", "{second_keyword}", ...]
-    },
-    ...
+    "projectTypes": {
+        "{key}": {
+            "max": {max_value},
+            "keywords": ["{first_keyword}", "{second_keyword}", ...]
+        },
+        ...
+    }
+    "times": {
+        "totalWorkHoursPerDay": 8,
+        "timeUnitInHours": 0.25
+    }
 }
 ```
 
-| Value                                | Type       | Description                                                                                                   |
-| ------------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------- |
-| key                                  | `string`   | Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)                       |
-| max_value                            | `number`   | The maximum time that will be spent to complete the task (you can specify your default time here by yourself) |
-| [first_keyword, second_keyword, ...] | `string[]` | Non-empty array of keywords which match specific project taskname.                                            |
+| Value                                | Type       | Description                                                                                                            |
+| ------------------------------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| projectTypes                         | `object`   | Object that collects all your project types that based on types from Akvelon ETS)                                      |
+| key                                  | `string`   | Your project taskname (For example: `PBI Desktop, Build and Accessibility.Development`)                                |
+| max_value                            | `number`   | The maximum time that will be spent to complete the task (you can specify your default time here by yourself)          |
+| [first_keyword, second_keyword, ...] | `string[]` | Non-empty array of keywords which match specific project taskname.                                                     |
+| times                                | `object`   | Object that collects your default time value (we recommend leaving the field values the same as in the example above)ю |
+| totalWorkHoursPerDay                 | `number`   | Total work hours in the day. Must be non negative integer.                                                             |
+| timeUnitInHours                      | `number`   | The minimal time unit that can be allocated to the task (dimension: hours)                                             |
+|                                      |
 
 Example:
 
 ```json
 {
-    "PBI Desktop, Build and Accessibility.Development": {
-        "max": 3,
-        "keywords": [
-            "update",
-            "create",
-            "develop",
-            "implement"
-        ]
-    },
-    "PBI Desktop, Build and Accessibility.Investigation": {
-        "max": 3,
-        "keywords": [
-            "investigate",
-            "debug",
-            "research"
-        ]
+   "projectTypes": {
+        "PBI Desktop, Build and Accessibility.Development": {
+            "max": 3,
+            "keywords": [
+                "update",
+                "create",
+                "develop",
+                "implement"
+            ]
+        },
+        "PBI Desktop, Build and Accessibility.Investigation": {
+            "max": 3,
+            "keywords": [
+                "investigate",
+                "debug",
+                "research"
+            ]
+        },
+        ...
+   },
+   "times": {
+        "totalWorkHoursPerDay": 8,
+        "timeUnitInHours": 0.25
     }
 }
 ```
 
-Let's investigate the first object inside `project.types.json`, because other objects will be almost the same.
+Let's investigate the first object of `projectTypes` inside `pleasure.config.json`, because other objects will be almost the same.
 
 `PBI Desktop, Build and Accessibility.Development` (and the others) - is a taskname of our project, but where can I receive it? It's easier than it looks!
 
@@ -83,7 +100,7 @@ Let's investigate the first object inside `project.types.json`, because other ob
 
 ![image](https://user-images.githubusercontent.com/60508001/181575987-85f89a37-0dc7-4752-9302-71e1159b69dd.png)
 
-After downloading `.xlsx` document, open it with Excel and you'll see all your tasknames in the `Projects` tab. Then copy your project tasknames to `project.types.json` and each of them will be the `key`.
+After downloading `.xlsx` document, open it with Excel and you'll see all your tasknames in the `Projects` tab. Then copy your project tasknames to `pleasure.config.json` and each of them will be the `key`.
 
 ![image](https://user-images.githubusercontent.com/60508001/181576713-f5a489b2-b827-4c68-9baa-44360ad35721.png)
 
@@ -126,7 +143,7 @@ Two rules must be followed while creating `statuses.txt`:
 -   each of your statuses must start with date written in correct date format (For instance: `7/30/2022` or `7-30-2022`). Slashes and dashed are supported as delimiters between `{month}` `{date}` and `{year}`, so formats `{month}/{date}/{year}` and `{month}-{date}-{year}` are supported;
 -   each of your statuses must a separator `===` following it, except the last status.
 
-### Excel time report file generation
+## Excel time report file generation
 
 As soon as all previous steps are completed you need to run: `pnpm start` in the root folder.
 
@@ -149,8 +166,15 @@ It looks like this:
    }
   ```
 
-##### <em>If you don't want to set up any options, you can just skip these questions by pressing enter.</em>
+(If you don't want to set up any options, you can just skip these questions by pressing enter)
 
 After that `Reports.xlsx` (or your custom report name) file will appear. Upload it on the Akvelon TTS using "Import from Excel" functionality.
 
 Enjoy!
+
+## Authors: 
+
+| Vladislav Evtushenko                                                          | Aleksandr Miroshnichenko                                                                                                              |                                                       
+--------------------------------------------------------------------- | --------------------------------------------------------------------------- 
+| ![Vladislav Evtushenjo](https://pbs.twimg.com/profile_images/1581742333200056322/ov01qZqU_400x400.jpg) | ![Aleksandr Miroshnichenko ](https://media-exp1.licdn.com/dms/image/C4D03AQH95ZAy_AupXQ/profile-displayphoto-shrink_800_800/0/1649235827833?e=1672876800&v=beta&t=aqCNZVCCOq_D7wWMxg2kK0pyAGe4Kbfry3o6_53L_VU) |
+| [vladIsLove-hub](https://github.com/vladIsLove-hub)                                  | [polotent](https://github.com/polotent)                       | 

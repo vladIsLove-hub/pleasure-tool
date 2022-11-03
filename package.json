@@ -1,59 +1,59 @@
 {
-    "name": "pleasure-tool",
-    "version": "3.0.0",
-    "description": "Tool which will save you a huge amount of time that you could spend on yourself or something else!",
-    "main": "index.js",
-    "scripts": {
-      "build": "node esbuild.file.js && cd ./lib && node bundle.js",
-      "clean": "node ./removeBundleDir.js",
-      "start": "pnpm build && pnpm clean",
-      "debug": "tsc && cd ./lib && node index.js && cd ../ && pnpm clean",
-      "lint": "eslint . --ext=.ts,.js",
-      "lint:fix": "eslint . --ext=.ts,.js --fix"
+  "name": "pleasure-tool",
+  "version": "3.0.1",
+  "description": "Tool which will save you a huge amount of time that you could spend on yourself or something else!",
+  "main": "index.js",
+  "scripts": {
+    "build": "node esbuild.file.js && cd ./lib && node bundle.js",
+    "clean": "node ./removeBundleDir.js",
+    "start": "pnpm build && pnpm clean",
+    "debug": "tsc && cd ./lib && node index.js && cd ../ && pnpm clean",
+    "lint": "eslint . --ext=.ts,.js",
+    "lint:fix": "eslint . --ext=.ts,.js --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vladIsLove-hub/pleasure-tool.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "JS",
+    "Automation",
+    "Excel",
+    "No-Time-Reports-Squad"
+  ],
+  "authors": [
+    {
+      "name": "Aleksandr Miroshnichenko",
+      "email": "alexmirosh37@gmail.com",
+      "linkedIn": "https://www.linkedin.com/in/aleksmiro/"
     },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/vladIsLove-hub/pleasure-tool.git"
-    },
-    "keywords": [
-      "NodeJS",
-      "JS",
-      "Automation",
-      "Excel",
-      "No-Time-Reports-Squad"
-    ],
-    "authors": [
-      {
-        "name": "Aleksandr Miroshnichenko",
-        "email": "alexmirosh37@gmail.com",
-        "linkedIn": "https://www.linkedin.com/in/aleksmiro/"
-      },
-      {
-        "name": "Vladislav Evtushenko",
-        "email": "vladislovedeveloper@gmail.com",
-        "linkedIn": "https://www.linkedin.com/in/vladislav-evtushenko-303bab1ba/"
-      }
-    ],
-    "engines": { 
-      "node": "^18.0.0 || ^16.0.0"
-    },
-    "license": "ISC",
-    "bugs": {
-      "url": "https://github.com/vladIsLove-hub/pleasure-tool/issues"
-    },
-    "homepage": "https://github.com/vladIsLove-hub/pleasure-tool#readme",
-    "dependencies": {
-      "chalk": "4.1.2",
-      "excel4node": "^1.7.2"
-    },
-    "devDependencies": {
-      "@types/chalk": "^2.2.0",
-      "@types/node": "^18.7.4",
-      "@typescript-eslint/eslint-plugin": "^5.40.1",
-      "@typescript-eslint/parser": "^5.40.1",
-      "esbuild": "^0.14.51",
-      "eslint": "8.25.0",
-      "prettier": "^2.7.1",
-      "typescript": "^4.8.4"
+    {
+      "name": "Vladislav Evtushenko",
+      "email": "vladislovedeveloper@gmail.com",
+      "linkedIn": "https://www.linkedin.com/in/vladislav-evtushenko-303bab1ba/"
     }
+  ],
+  "engines": {
+    "node": "^18.0.0 || ^16.0.0"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vladIsLove-hub/pleasure-tool/issues"
+  },
+  "homepage": "https://github.com/vladIsLove-hub/pleasure-tool#readme",
+  "dependencies": {
+    "chalk": "4.1.2",
+    "excel4node": "^1.7.2"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/node": "^18.7.4",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
+    "esbuild": "^0.14.51",
+    "eslint": "8.25.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
+  }
 }

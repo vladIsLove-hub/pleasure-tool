@@ -9,6 +9,7 @@ specifiers:
   esbuild: ^0.14.51
   eslint: 8.25.0
   excel4node: ^1.7.2
+  pnpm: ^7.14.0
   prettier: ^2.7.1
   typescript: ^4.8.4
 
@@ -23,6 +24,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.40.1_z4bbprzjrhnsfa24uvmcbu7f5q
   esbuild: 0.14.51
   eslint: 8.25.0
+  pnpm: 7.14.0
   prettier: 2.7.1
   typescript: 4.8.4
 
@@ -1079,6 +1081,12 @@ packages:
   /picomatch/2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
+    dev: true
+
+  /pnpm/7.14.0:
+    resolution: {integrity: sha512-yUKSckJLBIw8ByqMKJF9497kzwrevuQhdL6o2eYbky7woAictxoGX9veBdQYCdBemuC239X2FJq/LGTpCjQ55w==}
+    engines: {node: '>=14.6'}
+    hasBin: true
     dev: true
 
   /prelude-ls/1.2.1:
