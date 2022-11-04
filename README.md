@@ -96,13 +96,13 @@ Let's investigate the first object of `projectTypes` inside `pleasure.config.jso
 1. Go to [Akvelon ETS](https://ets.akvelon.net/)
 2. Sign in and then click `Download import template` in the dropdown menu:
 
-![image](https://user-images.githubusercontent.com/60508001/181575828-a4cf3adc-3c49-489a-a99c-60398b90d109.png)
+![Screenshot 2022-11-04 131207](https://user-images.githubusercontent.com/60508001/199970877-24ea2e15-9d2c-4480-b412-0efc0597fdaa.png)
 
-![image](https://user-images.githubusercontent.com/60508001/181575987-85f89a37-0dc7-4752-9302-71e1159b69dd.png)
+![Screenshot 2022-11-04 131351](https://user-images.githubusercontent.com/60508001/199970925-ef55b104-c8d1-4157-a563-75c31c7e9507.png)
 
 After downloading `.xlsx` document, open it with Excel and you'll see all your tasknames in the `Projects` tab. Then copy your project tasknames to `pleasure.config.json` and each of them will be the `key`.
 
-![image](https://user-images.githubusercontent.com/60508001/181576713-f5a489b2-b827-4c68-9baa-44360ad35721.png)
+![Screenshot 2022-11-04 131617](https://user-images.githubusercontent.com/60508001/199970981-2bd5caf1-d9ec-4b06-9425-309058d710ac.png)
 
 ### About `statuses.txt` file.
 
