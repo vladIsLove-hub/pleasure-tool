@@ -20,20 +20,27 @@ class Readline implements IReadline {
 		for (const [optionName, { question, defaultValue }] of Object.entries(pleasureCliOptions)) {
 			let answer;
 			while (true) {
-				answer = (await questionAsync(chalk.bold.magenta(`${question} (default: ${defaultValue}): `))) || defaultValue;
+				const supportedValuesTip = this.getSupportedValuesTip(optionName);
+				answer = (await questionAsync(chalk.bold.magenta(`${question} (${supportedValuesTip}; default value: ${defaultValue}): `))) || defaultValue;
 				try {
 					await readlineValidator.validate(optionName, answer);
 					break;
 				} catch (e) {
-					if (e instanceof Error) {
-						this.logger.warn(e.message);
-					}
+					continue;
 				}
 			}
 			await storeCLI.push({ optionName, answer });
 		}
 
 		rl.close();
+	}
+
+	private getSupportedValuesTip(optionName: string): string {
+		const cliOption = pleasureCliOptions[optionName];
+		const { constraints } = cliOption;
+		return cliOption.type === "number"
+			? `supported values: ${constraints.format.join(", ")}`
+			: `supported length from ${constraints.min} to ${constraints.max}`;
 	}
 }
 

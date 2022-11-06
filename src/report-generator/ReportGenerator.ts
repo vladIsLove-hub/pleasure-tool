@@ -6,9 +6,10 @@ import { IReportGenerator } from "./types/reportGenerator.types";
 import { IStatusParser } from "../parser/types/parser.types";
 import { StoreCLINames } from "../store-cli/types/storeCLI.types";
 import utils from '../utils/Utils';
-import chalk from "chalk";
+import { errors } from "../messages";
 import storeCLI from "../store-cli/StoreCLI";
 import config from '../config/pleasure.config';
+import { Message } from '../messages/types/messages.types';
 
 class ReportGenerator implements IReportGenerator {
 	private reports: IReport[] = [];
@@ -23,11 +24,33 @@ class ReportGenerator implements IReportGenerator {
 
 		await this.handleOverworks(statuses);
 
+		const collectedErrors: Message[] = [];
 		for (const status of statuses) {
 			const { date } = status;
-			const taskDescriptions: string[] = await this.getTaskDescriptions(status);
-			const tasks: ITask[] = await this.createTasks(taskDescriptions);
-			const normalizedTasks = await utils.getNormalizedTasksByEfforts(tasks, date, status.overworkTimeInTimeUnits);
+
+			let taskDescriptions: string[];
+			try {
+				taskDescriptions = await this.getTaskDescriptions(status);
+			} catch (e) {
+				collectedErrors.push(e as Message);
+				continue;
+			}
+
+			let tasks: ITask[];
+			try {
+				tasks = await this.createTasks(taskDescriptions);
+			} catch (e) {
+				collectedErrors.push(e as Message);
+				continue;
+			}
+
+			let normalizedTasks: ITask[];
+			try {
+				normalizedTasks = await utils.getNormalizedTasksByEfforts(tasks, date, status.overworkTimeInTimeUnits);
+			} catch (e) {
+				collectedErrors.push(e as Message);
+				continue;
+			}
 
 			normalizedTasks.forEach((task) => this.reports.push(
 				{
@@ -37,6 +60,11 @@ class ReportGenerator implements IReportGenerator {
 					reportType: task.type
 				}
 			));
+		}
+
+		if (collectedErrors.length) {
+			this.logger.errors(collectedErrors);
+			process.exit();
 		}
 
 		this.reports.sort((a, b) => (Number(new Date(a.date)) - Number(new Date(b.date))));
@@ -51,16 +79,18 @@ class ReportGenerator implements IReportGenerator {
 			.split('\n')
 			.filter((descriptionLine: string) => descriptionLine.length);
 
-		for (const filteredTaskDescription of filteredTaskDescriptions) {
-			if (!filteredTaskDescription.trim().startsWith('-')) {
-				this.logger.error(`Wrong description format for the following date: ${date}. Each description must start with '-'.`)
-			}
+		if (!filteredTaskDescriptions.length) {
+			throw { text: errors.DescriptionsNotFound, args: [date] };
+			// this.logger.error(errors.DescriptionsNotFound, date);
+			// process.exit();
 		}
 
-		if (!filteredTaskDescriptions.length) {
-			this.logger.error(`
-          No descriptions were found in <statuses.txt> file which start with '-' for the following date: ${date}.
-        `);
+		for (const filteredTaskDescription of filteredTaskDescriptions) {
+			if (!filteredTaskDescription.trim().startsWith('-')) {
+				throw { text: errors.InvalidDescriptionFormat, args: [date] };
+				// this.logger.error(errors.InvalidDescriptionFormat, date);
+				// process.exit();
+			}
 		}
 
 		return filteredTaskDescriptions.map((description: string) => description.replace(/\s{0,}-\s{0,}/, '').replace('\r', ''));
@@ -73,7 +103,9 @@ class ReportGenerator implements IReportGenerator {
 			const descriptionType: string = await this.getDescriptionType(taskDescription) || '';
 
 			if (!descriptionType) {
-				this.logger.error(`No matching description type was found for description type: ${chalk.underline(taskDescription)}`)
+				throw { text: errors.NoMatchingDescriptionType, args: [taskDescription] };
+				// this.logger.error(errors.NoMatchingDescriptionType, taskDescription);
+				// process.exit();
 			}
 
 			tasks.push({

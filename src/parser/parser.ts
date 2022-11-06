@@ -1,7 +1,8 @@
-import { IStatus } from '../report-generator/types/status.types';
 import * as fs from 'fs/promises';
-import { IStatusParser } from './types/parser.types';
 import path from 'path';
+import { errors } from '../messages';
+import { IStatus } from '../report-generator/types/status.types';
+import { IStatusParser } from './types/parser.types';
 import { ILogger } from '../logger/types/logger.types';
 
 export default class StatusParser implements IStatusParser {
@@ -18,7 +19,8 @@ export default class StatusParser implements IStatusParser {
 		const statusesFileContent = await this.getStatusesFileContent();
 
 		if (!statusesFileContent) {
-			this.logger.error('Statuses file is empty. Read README.md');
+			this.logger.error(errors.EmptyFile, "statuses.txt");
+			process.exit();
 		}
 
 		const statuses: IStatus[] = statusesFileContent
@@ -27,19 +29,22 @@ export default class StatusParser implements IStatusParser {
 				const parsedDate = status.match(/\d{0,}\/\d{0,}\/\d{0,}/gi);
 
 				if (!parsedDate || !parsedDate.length) {
-					this.logger.error(`Wrong date format for the status: \n ${status}`);
+					this.logger.error(errors.StatusInvalidDateFormat, status);
+					process.exit();
 				}
 
 				const dateToValidate = new Date(parsedDate![0]);
                 
 				if (!(dateToValidate instanceof Date) || isNaN(<any>dateToValidate)) {
-					this.logger.error(`Wrong date format for the status: \n ${status}`);
+					this.logger.error(errors.StatusInvalidDateFormat, status);
+					process.exit();
 				}
 
 				const date = `${dateToValidate.getMonth() + 1}/${dateToValidate.getDate()}/${dateToValidate.getFullYear()}`;
 
 				if (this.uniqueDates.includes(date)) {
-					this.logger.error(`Duplicate date was found: ${date}`);
+					this.logger.error(errors.StatusDuplicateDate, date);
+					process.exit();
 				}
 
 				this.uniqueDates.push(date);
@@ -58,7 +63,8 @@ export default class StatusParser implements IStatusParser {
 			return await fs.readFile(StatusParser.STATUSES_PATH, { encoding: 'utf-8' });
 		} catch(e) {
 			if (e instanceof Error) {
-				this.logger.error(`File <statuses.txt> was not found by the following path: ${StatusParser.STATUSES_PATH}`)
+				this.logger.error(errors.FileNotFound, StatusParser.STATUSES_PATH);
+				process.exit();
 			}
 			throw e;
 		}
