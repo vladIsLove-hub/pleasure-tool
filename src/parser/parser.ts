@@ -1,9 +1,10 @@
-import * as fs from 'fs/promises';
-import path from 'path';
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
+
+import { ILogger } from '../logger/types/logger.types';
 import { errors } from '../messages';
 import { IStatus } from '../report-generator/types/status.types';
 import { IStatusParser } from './types/parser.types';
-import { ILogger } from '../logger/types/logger.types';
 
 export default class StatusParser implements IStatusParser {
 	private static STATUSES_PATH: string = path.resolve(process.cwd(), '../statuses.txt');
@@ -26,7 +27,7 @@ export default class StatusParser implements IStatusParser {
 		const statuses: IStatus[] = statusesFileContent
 			.split(StatusParser.STATUS_SEPARATOR)
 			.map((status: string) => {
-				const parsedDate = status.match(/\d{0,}\/\d{0,}\/\d{0,}/gi);
+				const parsedDate = status.match(/\d{0,}(\/|-)\d{0,}(\/|-)\d{0,}/gi);
 
 				if (!parsedDate || !parsedDate.length) {
 					this.logger.error(errors.StatusInvalidDateFormat, status);

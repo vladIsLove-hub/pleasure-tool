@@ -1,7 +1,8 @@
-import { ILogger } from './types/logger.types';
 import chalk from 'chalk';
 import util from 'node:util';
+
 import { Message } from '../messages/types/messages.types';
+import { ILogger } from './types/logger.types';
 
 class Logger implements ILogger {
 	public log(messages: string[]): void {
@@ -11,32 +12,34 @@ class Logger implements ILogger {
 	public error(errorMessage: string, ...args: any[]): void {
 		const resultMessage = this.formatArgs(errorMessage, ...args);
 		const indentedMessages = this.getIndentedMessages(chalk.bold.red('ERROR: '), `${resultMessage}`);
-		console.log(...indentedMessages);
+		this.log(indentedMessages);
 	}
 
 	public errors(errors: Message[]): void {
-		console.log(this.getErrorsSummary(errors));
+		this.log([this.getErrorsSummary(errors)]);
 		for (let i = 0; i < errors.length; i++) {
 			const error = errors[i];
 			const resultMessage = `(${chalk.bold.red(i+1)}) ${this.formatArgs(error.text, ...error.args)}`;
-			console.log(resultMessage);
+			this.log([resultMessage]);
 		}
 	}
 
 	public explicitError(error: Error): void {
 		const resultMessage = `${chalk.bold.red(error.name)}: ${error.message}`;
-		console.log(resultMessage);
+		const indentedMessages = this.getIndentedMessages(resultMessage);
+		this.log(indentedMessages);
 	}
 
 	public warn(warningMessage: string, ...args: any[]): void {
 		const resultMessage = this.formatArgs(warningMessage, ...args);
 		const indentedMessages = this.getIndentedMessages(chalk.bold.yellow('WARNING: '), resultMessage);
-		console.log(...indentedMessages);
+		this.log(indentedMessages);
 	}
 
 	public success(successMessage: string, ...args: any[]): void {
 		const resultMessage = this.formatArgs(successMessage, ...args);
-		console.log(chalk.bold.green('SUCCESS: '), resultMessage);
+		const indentedMessages = this.getIndentedMessages(chalk.bold.green('SUCCESS: '), resultMessage);
+		this.log(indentedMessages);
 	}
 
 	private formatArgs(message: string, ...args: any[]): string {

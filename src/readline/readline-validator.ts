@@ -1,8 +1,8 @@
-import { IReadlineCLIOptionsValidator, IReadlineValidator } from './types/readlineValidator.types';
 import pleasureCliOptions from '../../pleasure.readline.json';
+import logger from '../logger/logger';
 import { ILogger } from '../logger/types/logger.types';
-import logger from '../logger/Logger';
 import { errors } from '../messages';
+import { IReadlineCLIOptionsValidator, IReadlineValidator } from './types/readline-validator.types';
 
 class ReadlineValidator implements IReadlineValidator {
 	constructor(protected logger: ILogger) { }
@@ -72,11 +72,6 @@ class ReadlineCLIJSONValidator extends ReadlineValidator implements IReadlineCLI
 
 			const { type } = cliOption;
 			const { min, max, format } = JSON.parse(JSON.stringify(cliOption.constraints));
-
-			if (type === undefined) {
-				this.logger.error(errors.FieldNotSpecified, 'type', ReadlineCLIJSONValidator.readlineConfigFileName);
-				process.exit();
-			}
 
 			if (type === 'string') {
 				if (min === undefined) {

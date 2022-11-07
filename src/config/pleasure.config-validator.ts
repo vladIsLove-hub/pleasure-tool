@@ -1,6 +1,6 @@
-import logger from '../logger/Logger';
-import { errors, warnings } from '../messages';
+import logger from '../logger/logger';
 import { ILogger } from '../logger/types/logger.types';
+import { errors, warnings } from '../messages';
 import { PleasureConfig, IPleasureConfigValidator } from './types/pleasure.config.types';
 
 class PleasureConfigValidator implements IPleasureConfigValidator {
@@ -29,38 +29,49 @@ class PleasureConfigValidator implements IPleasureConfigValidator {
 		const uniqueKeywords: { uniqueKey: string; keywords: string[] }[] = [];
 		for (const key in projectTypes) {
 			const typeInfo = projectTypes[key];
-			if (!('max' in typeInfo) || !('keywords' in typeInfo)) {
-				this.logger.error(errors.InvalidFileFormatForProjectType, PleasureConfigValidator.configFileName, key);
+			if (!('max' in typeInfo)) {
+				this.logger.error(errors.ProjectTypeFieldNotSpecified, 'max', key, PleasureConfigValidator.configFileName);
 				process.exit();
 			}
 
-			if (!this.isNumber(typeInfo['max'])) {
-				this.logger.error(errors.FieldValueInvalidType, 'max', key, 'number', PleasureConfigValidator.configFileName);
+			if (!('keywords' in typeInfo)) {
+				this.logger.error(errors.ProjectTypeFieldNotSpecified, 'keywords', key, PleasureConfigValidator.configFileName);
 				process.exit();
 			}
 
-			if (!this.isNotNegative(typeInfo['max'])) {
-				this.logger.error(errors.FieldValueIsNegative, 'max', key, PleasureConfigValidator.configFileName);
+			const { max, keywords } = typeInfo;
+
+			if (!this.isNumber(max)) {
+				this.logger.error(errors.ProjectTypeFieldValueInvalidType, 'max', key, 'number', PleasureConfigValidator.configFileName);
 				process.exit();
 			}
 
-			if (!Array.isArray(typeInfo['keywords'])) {
-				this.logger.error(errors.FieldValueInvalidType, 'keywords', key, 'array of not empty strings', PleasureConfigValidator.configFileName);
+			if (!this.isNotNegative(max)) {
+				this.logger.error(errors.ProjectTypeFieldValueIsNegative, 'max', key, PleasureConfigValidator.configFileName);
 				process.exit();
 			}
 
-			for (const keyWord of typeInfo['keywords']) {
-				if (!keyWord || typeof keyWord !== 'string') {
-					this.logger.error(errors.FieldValueInvalidType, 'keywords', key, 'array of not empty strings', PleasureConfigValidator.configFileName);
-					process.exit();
+			let isKeywordsInvalidType = false;
+			if (!Array.isArray(keywords) || !keywords.length) {
+				isKeywordsInvalidType = true;
+			}
+
+			for (const keyword of keywords) {
+				if (!keyword || typeof keyword !== 'string') {
+					isKeywordsInvalidType = true;
 				}
 			}
 
-			const hash = {};
+			if (isKeywordsInvalidType) {
+				this.logger.error(errors.ProjectTypeFieldValueInvalidType, 'keywords', key, 'array of not empty strings', PleasureConfigValidator.configFileName);
+				process.exit();
+			}
+
+			const keywordEntries = {};
 			for (const keyword of projectTypes[key].keywords) {
 				const keywordLowerCase = keyword.toLowerCase();
-				hash[keywordLowerCase] = hash[keywordLowerCase] + 1 || 1;
-				if (hash[keywordLowerCase] > 1)
+				keywordEntries[keywordLowerCase] = keywordEntries[keywordLowerCase] + 1 || 1;
+				if (keywordEntries[keywordLowerCase] > 1)
 					this.logger.warn(warnings.DuplicateKeyword, keyword, key);
 			}
 
@@ -79,17 +90,17 @@ class PleasureConfigValidator implements IPleasureConfigValidator {
 			});
 		}
 
-		if (!times) {
+		if (times === undefined) {
 			this.logger.error(errors.FieldNotSpecified, 'times', PleasureConfigValidator.configFileName);
 			process.exit();
 		}
 
-		if (!times.totalWorkHoursPerDay) {
+		if (times.totalWorkHoursPerDay === undefined) {
 			this.logger.error(errors.FieldNotSpecified, 'totalWorkHoursPerDay', PleasureConfigValidator.configFileName);
 			process.exit();
 		}
 
-		if (!times.timeUnitInHours) {
+		if (!times.timeUnitInHours === undefined) {
 			this.logger.error(errors.FieldNotSpecified, 'timeUnitInHours', PleasureConfigValidator.configFileName);
 			process.exit();
 		}
@@ -111,6 +122,7 @@ class PleasureConfigValidator implements IPleasureConfigValidator {
 
 		if(!this.isNotNegative(times.timeUnitInHours)) {
 			this.logger.error(errors.FieldValueIsNegative, 'timeUnitInHours', PleasureConfigValidator.configFileName);
+			process.exit();
 		}
 	}
 }

@@ -1,14 +1,16 @@
-import * as readline from 'readline';
-import { stdin as input, stdout as output } from 'node:process';
-import { IReadline } from './types/readline.types';
-import { readlineValidator, readlineCliOptionsValidator } from './ReadlineValidator';
-import { ILogger } from '../logger/types/logger.types';
-import { IPromisify } from '../utils/types/promisify.types';
-import promisify from '../utils/Promisify';
-import logger from '../logger/Logger';
-import pleasureCliOptions from '../../pleasure.readline.json';
-import storeCLI from '../store-cli/StoreCLI';
 import chalk from 'chalk';
+import { stdin as input, stdout as output } from 'node:process';
+import * as readline from 'node:readline';
+
+import pleasureCliOptions from '../../pleasure.readline.json';
+import logger from '../logger/logger';
+import { ILogger } from '../logger/types/logger.types';
+import storeCLI from '../store-cli/store-cli';
+import promisify from '../utils/promisify';
+import { IPromisify } from '../utils/types/promisify.types';
+import { readlineValidator, readlineCliOptionsValidator } from './readline-validator';
+import { IReadline } from './types/readline.types';
+
 
 class Readline implements IReadline {
 	constructor(private logger: ILogger, private promisify: IPromisify) { }

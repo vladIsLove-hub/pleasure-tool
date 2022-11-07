@@ -1,15 +1,15 @@
-import { IStatus } from './types/status.types';
-import { IReport } from './types/report.types';
-import { ITask } from './types/task.types';
-import { ILogger } from '../logger/types/logger.types';
-import { IReportGenerator } from './types/reportGenerator.types';
-import { IStatusParser } from '../parser/types/parser.types';
-import { StoreCLINames } from '../store-cli/types/storeCLI.types';
-import utils from '../utils/Utils';
-import { errors } from '../messages';
-import storeCLI from '../store-cli/StoreCLI';
 import config from '../config/pleasure.config';
+import { ILogger } from '../logger/types/logger.types';
+import { errors } from '../messages';
 import { Message } from '../messages/types/messages.types';
+import { IStatusParser } from '../parser/types/parser.types';
+import storeCLI from '../store-cli/store-cli';
+import { StoreCLINames } from '../store-cli/types/store-cli.types';
+import utils from '../utils/utils';
+import { IReportGenerator } from './types/report-generator.types';
+import { IReport } from './types/report.types';
+import { IStatus } from './types/status.types';
+import { ITask } from './types/task.types';
 
 class ReportGenerator implements IReportGenerator {
 	private reports: IReport[] = [];

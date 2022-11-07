@@ -1,6 +1,7 @@
-import path from 'path';
+import path from 'node:path';
+
 import { errors, successes } from '../messages';
-import storeCLI from '../store-cli/StoreCLI';
+import storeCLI from '../store-cli/store-cli';
 class ExcelGenerator {
 	constructor(excel, logger, promisify) {
 		this.excel = excel;
@@ -34,7 +35,7 @@ class ExcelGenerator {
 			process.exit();
 		}
 
-		this.logger.success(successes.ExcelGenerated, path.basename(this.reportName));
+		this.logger.success(successes.ExcelGenerated, path.resolve(this.reportName));
 	}
 
 	async createDefaultHeaders() {
@@ -47,7 +48,7 @@ class ExcelGenerator {
 
 	setReportName() {
 		storeCLI.getStore().then(storeItems => {
-			let cliReportNameOption = storeItems.find(cliOption => cliOption.optionName === 'reportName');
+			const cliReportNameOption = storeItems.find(cliOption => cliOption.optionName === 'reportName');
 			if (!cliReportNameOption) {
 				this.logger.error(errors.CLIOptionNotProvided, 'reportName');
 				process.exit();
