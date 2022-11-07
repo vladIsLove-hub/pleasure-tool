@@ -149,9 +149,9 @@ As soon as all previous steps are completed you need to run: `pnpm start` in the
 
 After you have run `pnpm start` you'll be able to set all the necessary options for your status.
 
-It looks like this: 
+It looks like this:
 
-![image](https://user-images.githubusercontent.com/60508001/187263439-d7ebce5c-7786-4420-8db2-e4ebe8f9d709.png)
+![image](https://user-images.githubusercontent.com/30413124/200375419-8243f445-2700-478f-812c-8eaff995d3b9.png)
 
 ### <em>Notes:</em>
 
