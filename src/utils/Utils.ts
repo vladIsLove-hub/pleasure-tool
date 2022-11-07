@@ -1,11 +1,11 @@
-import logger from "../logger/Logger";
-import { ILogger } from "../logger/types/logger.types";
-import { ITask } from "../report-generator/types/task.types";
-import { IUtils } from "./types/utils.types";
+import logger from '../logger/Logger';
+import { ILogger } from '../logger/types/logger.types';
+import { ITask } from '../report-generator/types/task.types';
+import { IUtils } from './types/utils.types';
 import pleasureConfig from '../../pleasure.config.json';
 import config from '../config/pleasure.config';
 import storeCli from '../store-cli/StoreCLI';
-import { errors } from "../messages";
+import { errors } from '../messages';
 
 class Utils implements IUtils {
 
@@ -27,7 +27,7 @@ class Utils implements IUtils {
 				}
 			}
 			return currentTask;
-		}
+		};
 
 		let tasksTotalTimeInHours: number = tasks.reduce((acc, task) => acc += task.time, 0);
 
@@ -39,9 +39,7 @@ class Utils implements IUtils {
 				tasksTotalTimeInHours -= timeUnitInHours;
 			}
 		} else {
-			throw { text: errors.NotEnoughDescriptions, args: [date] }; 
-			// this.logger.error(errors.NotEnoughDescriptions, date);
-			// process.exit();
+			throw { text: errors.NotEnoughDescriptions, args: [date] };
 		}
 
 		if (overworkTimeInTimeUnits) {
@@ -56,9 +54,7 @@ class Utils implements IUtils {
 			}
 
 			if (tasksWithoutOverworkAmount === tasks.length) {
-				throw { text: errors.NoDescriptionsToApplyOverwork, args: [date] } 
-				// this.logger.error(errors.NoDescriptionsToApplyOverwork, date);
-				// process.exit();
+				throw { text: errors.NoDescriptionsToApplyOverwork, args: [date] };
 			}
 
 			tasks.sort((a: ITask, b: ITask) => pleasureConfig.projectTypes[b.type].max - pleasureConfig.projectTypes[a.type].max);

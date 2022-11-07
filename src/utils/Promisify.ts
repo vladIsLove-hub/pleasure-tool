@@ -1,4 +1,4 @@
-import { IPromisify } from "./types/promisify.types";
+import { IPromisify } from './types/promisify.types';
 
 class Promisify implements IPromisify {
 	public async promisifyReadlineQuestion(fn: (query: string, callback: (answer: string) => void) => void): Promise<(question: string) => Promise<string>> {
@@ -8,16 +8,16 @@ class Promisify implements IPromisify {
 					resolve(answer);
 				});
 			});
-		}
+		};
 	}
 
 	public async promisifyExcelWrite(fn: (reportName: string) => void): Promise<(reportName: string) => Promise<void>> {
 		return async (reportName: string): Promise<void> => {
 			return new Promise(async (resolve) => {
-				fn(reportName)
+				fn(reportName);
 				resolve();
 			});
-		}
+		};
 	}
 }
 

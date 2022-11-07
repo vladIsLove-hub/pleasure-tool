@@ -1,5 +1,16 @@
 {
     "rules": {
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-trailing-spaces": [
+            "error"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
         "indent": [
             "error",
             "tab"

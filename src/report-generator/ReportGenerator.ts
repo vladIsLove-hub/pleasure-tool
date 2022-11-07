@@ -1,13 +1,13 @@
-import { IStatus } from "./types/status.types";
-import { IReport } from "./types/report.types";
-import { ITask } from "./types/task.types";
-import { ILogger } from "../logger/types/logger.types";
-import { IReportGenerator } from "./types/reportGenerator.types";
-import { IStatusParser } from "../parser/types/parser.types";
-import { StoreCLINames } from "../store-cli/types/storeCLI.types";
+import { IStatus } from './types/status.types';
+import { IReport } from './types/report.types';
+import { ITask } from './types/task.types';
+import { ILogger } from '../logger/types/logger.types';
+import { IReportGenerator } from './types/reportGenerator.types';
+import { IStatusParser } from '../parser/types/parser.types';
+import { StoreCLINames } from '../store-cli/types/storeCLI.types';
 import utils from '../utils/Utils';
-import { errors } from "../messages";
-import storeCLI from "../store-cli/StoreCLI";
+import { errors } from '../messages';
+import storeCLI from '../store-cli/StoreCLI';
 import config from '../config/pleasure.config';
 import { Message } from '../messages/types/messages.types';
 
@@ -38,9 +38,11 @@ class ReportGenerator implements IReportGenerator {
 
 			let tasks: ITask[];
 			try {
-				tasks = await this.createTasks(taskDescriptions);
+				tasks = await this.createTasks(taskDescriptions, date);
 			} catch (e) {
-				collectedErrors.push(e as Message);
+				for (const error of e as Message[]) {
+					collectedErrors.push(error);
+				}
 				continue;
 			}
 
@@ -81,38 +83,41 @@ class ReportGenerator implements IReportGenerator {
 
 		if (!filteredTaskDescriptions.length) {
 			throw { text: errors.DescriptionsNotFound, args: [date] };
-			// this.logger.error(errors.DescriptionsNotFound, date);
-			// process.exit();
 		}
 
 		for (const filteredTaskDescription of filteredTaskDescriptions) {
 			if (!filteredTaskDescription.trim().startsWith('-')) {
 				throw { text: errors.InvalidDescriptionFormat, args: [date] };
-				// this.logger.error(errors.InvalidDescriptionFormat, date);
-				// process.exit();
 			}
 		}
 
 		return filteredTaskDescriptions.map((description: string) => description.replace(/\s{0,}-\s{0,}/, '').replace('\r', ''));
 	}
 
-	private async createTasks(taskDescriptions: string[]): Promise<ITask[]> {
+	private async createTasks(taskDescriptions: string[], date: string): Promise<ITask[]> {
 		const tasks: ITask[] = [];
 
+		const collectedErrors: Message[] = [];
 		for (const taskDescription of taskDescriptions) {
 			const descriptionType: string = await this.getDescriptionType(taskDescription) || '';
 
 			if (!descriptionType) {
-				throw { text: errors.NoMatchingDescriptionType, args: [taskDescription] };
-				// this.logger.error(errors.NoMatchingDescriptionType, taskDescription);
-				// process.exit();
+				collectedErrors.push({
+					text: errors.NoMatchingDescriptionType,
+					args: [date, taskDescription]
+				});
+				continue;
 			}
 
 			tasks.push({
 				type: descriptionType,
 				time: config.projectTypes[descriptionType].max,
 				description: taskDescription,
-			})
+			});
+		}
+
+		if (collectedErrors.length) {
+			throw collectedErrors;
 		}
 
 		return tasks;

@@ -4,8 +4,8 @@ const build = require('esbuild').build;
 build({
 	entryPoints: ['index.ts'],
 	bundle: true,
-	platform: "node",
+	platform: 'node',
 	outfile: './lib/bundle.js',
-	loader: { ".ts": "ts" }
+	loader: { '.ts': 'ts' }
 })
 	.catch((e) => console.error(chalk.red(e.message)));

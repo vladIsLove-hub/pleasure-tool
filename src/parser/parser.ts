@@ -19,7 +19,7 @@ export default class StatusParser implements IStatusParser {
 		const statusesFileContent = await this.getStatusesFileContent();
 
 		if (!statusesFileContent) {
-			this.logger.error(errors.EmptyFile, "statuses.txt");
+			this.logger.error(errors.EmptyFile, StatusParser.STATUSES_PATH);
 			process.exit();
 		}
 
@@ -34,7 +34,7 @@ export default class StatusParser implements IStatusParser {
 				}
 
 				const dateToValidate = new Date(parsedDate![0]);
-                
+
 				if (!(dateToValidate instanceof Date) || isNaN(<any>dateToValidate)) {
 					this.logger.error(errors.StatusInvalidDateFormat, status);
 					process.exit();
@@ -52,7 +52,7 @@ export default class StatusParser implements IStatusParser {
 				return {
 					date,
 					statusText: status.replace(parsedDate![0], '').trim()
-				}
+				};
 			});
 
 		return statuses;

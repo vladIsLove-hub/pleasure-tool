@@ -13,6 +13,6 @@ const main = async () => {
 	const statusParser: IStatusParser = new StatusParser(logger);
 	const reports: IReport[] = await new ReportGenerator(statusParser, logger).generate();
 	await new ExcelGenerator(excel, logger, promisify).generate(reports);
-}
+};
 
 main();

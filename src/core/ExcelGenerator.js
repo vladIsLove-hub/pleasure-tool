@@ -14,13 +14,13 @@ class ExcelGenerator {
 	async generate(reports) {
 		await this.createDefaultHeaders();
 
-		let rowIndex = 3
+		let rowIndex = 3;
 		for (const report of reports) {
 			const currentDate = new Date(report.date);
 			currentDate.setDate(currentDate.getDate() + 1);
 			this.worksheet.cell(rowIndex, 1).string(report.reportType);
 			this.worksheet.cell(rowIndex, 2).number(report.effortTime);
-			this.worksheet.cell(rowIndex, 3).string(report.description)
+			this.worksheet.cell(rowIndex, 3).string(report.description);
 			this.worksheet.cell(rowIndex, 4).date(currentDate);
 			rowIndex++;
 		}
@@ -49,7 +49,7 @@ class ExcelGenerator {
 		storeCLI.getStore().then(storeItems => {
 			let cliReportNameOption = storeItems.find(cliOption => cliOption.optionName === 'reportName');
 			if (!cliReportNameOption) {
-				this.logger.error(errors.CLIOptionNotProvided, "reportName");
+				this.logger.error(errors.CLIOptionNotProvided, 'reportName');
 				process.exit();
 			} else {
 				let reportName = String(cliReportNameOption.answer);
@@ -59,7 +59,7 @@ class ExcelGenerator {
 				}
 				this.reportName = `../${reportName}.xlsx`;
 			}
-		})
+		});
 	}
 }
 

@@ -38,8 +38,8 @@ class Readline implements IReadline {
 	private getSupportedValuesTip(optionName: string): string {
 		const cliOption = pleasureCliOptions[optionName];
 		const { constraints } = cliOption;
-		return cliOption.type === "number"
-			? `supported values: ${constraints.format.join(", ")}`
+		return cliOption.type === 'number'
+			? `supported values: ${constraints.format.join(', ')}`
 			: `supported length from ${constraints.min} to ${constraints.max}`;
 	}
 }
