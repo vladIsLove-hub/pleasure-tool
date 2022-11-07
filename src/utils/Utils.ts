@@ -1,11 +1,11 @@
-import chalk from "chalk";
-import logger from "../logger/Logger";
-import { ILogger } from "../logger/types/logger.types";
-import { ITask } from "../report-generator/types/task.types";
-import { IUtils } from "./types/utils.types";
 import pleasureConfig from '../../pleasure.config.json';
 import config from '../config/pleasure.config';
-import storeCli from '../store-cli/StoreCLI';
+import logger from '../logger/logger';
+import { ILogger } from '../logger/types/logger.types';
+import { errors } from '../messages';
+import { ITask } from '../report-generator/types/task.types';
+import storeCli from '../store-cli/store-cli';
+import { IUtils } from './types/utils.types';
 
 class Utils implements IUtils {
 
@@ -27,7 +27,7 @@ class Utils implements IUtils {
 				}
 			}
 			return currentTask;
-		}
+		};
 
 		let tasksTotalTimeInHours: number = tasks.reduce((acc, task) => acc += task.time, 0);
 
@@ -39,7 +39,7 @@ class Utils implements IUtils {
 				tasksTotalTimeInHours -= timeUnitInHours;
 			}
 		} else {
-			this.logger.error(`You must write more fields in your status for date: ${chalk.underline(date)}`);
+			throw { text: errors.NotEnoughDescriptions, args: [date] };
 		}
 
 		if (overworkTimeInTimeUnits) {
@@ -54,7 +54,7 @@ class Utils implements IUtils {
 			}
 
 			if (tasksWithoutOverworkAmount === tasks.length) {
-				this.logger.error(`There are no task descriptions for overwork for date: ${chalk.underline(date)}`)
+				throw { text: errors.NoDescriptionsToApplyOverwork, args: [date] };
 			}
 
 			tasks.sort((a: ITask, b: ITask) => pleasureConfig.projectTypes[b.type].max - pleasureConfig.projectTypes[a.type].max);

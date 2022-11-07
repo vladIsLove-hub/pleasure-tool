@@ -1,5 +1,7 @@
-import path from 'path';
-import storeCLI from '../store-cli/StoreCLI';
+import path from 'node:path';
+
+import { errors, successes } from '../messages';
+import storeCLI from '../store-cli/store-cli';
 class ExcelGenerator {
 	constructor(excel, logger, promisify) {
 		this.excel = excel;
@@ -13,13 +15,13 @@ class ExcelGenerator {
 	async generate(reports) {
 		await this.createDefaultHeaders();
 
-		let rowIndex = 3
+		let rowIndex = 3;
 		for (const report of reports) {
 			const currentDate = new Date(report.date);
 			currentDate.setDate(currentDate.getDate() + 1);
 			this.worksheet.cell(rowIndex, 1).string(report.reportType);
 			this.worksheet.cell(rowIndex, 2).number(report.effortTime);
-			this.worksheet.cell(rowIndex, 3).string(report.description)
+			this.worksheet.cell(rowIndex, 3).string(report.description);
 			this.worksheet.cell(rowIndex, 4).date(currentDate);
 			rowIndex++;
 		}
@@ -29,10 +31,11 @@ class ExcelGenerator {
 		try {
 			await excelWriteAsync(this.reportName);
 		} catch (e) {
-			this.logger.error(e);
+			this.logger.explicitError(e);
+			process.exit();
 		}
 
-		this.logger.success(`The excel file was generated successfully with the name: ${path.basename(this.reportName)}`)
+		this.logger.success(successes.ExcelGenerated, path.resolve(this.reportName));
 	}
 
 	async createDefaultHeaders() {
@@ -45,9 +48,10 @@ class ExcelGenerator {
 
 	setReportName() {
 		storeCLI.getStore().then(storeItems => {
-			let cliReportNameOption = storeItems.find(cliOption => cliOption.optionName === 'reportName');
+			const cliReportNameOption = storeItems.find(cliOption => cliOption.optionName === 'reportName');
 			if (!cliReportNameOption) {
-				this.logger.error('reportName CLI option was not provided. Check out README.md');
+				this.logger.error(errors.CLIOptionNotProvided, 'reportName');
+				process.exit();
 			} else {
 				let reportName = String(cliReportNameOption.answer);
 				const extName = path.extname(reportName);
@@ -56,7 +60,7 @@ class ExcelGenerator {
 				}
 				this.reportName = `../${reportName}.xlsx`;
 			}
-		})
+		});
 	}
 }
 

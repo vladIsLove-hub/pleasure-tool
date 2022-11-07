@@ -1,4 +1,4 @@
-# Pleasure-Tool (v3.0.1)
+# Pleasure-Tool (v3.1.0)
 
 ## Motivation: 
 
@@ -60,7 +60,7 @@ Let's start with `pleasure.config.json`. It's the main file where tasks of your 
 
 Example:
 
-```json
+```json5
 {
    "projectTypes": {
         "PBI Desktop, Build and Accessibility.Development": {
@@ -157,7 +157,7 @@ It looks like this:
 
 - Currently you can specify only 5 or 10 percent of overwork. (Any other values will be considered are incorrect).
 - You can pass your personal report filename. Currently, the report filename must be not longer than 20 symbols.
-- You can specify `overwork: "false"` in the `projects.types.json` if you don't want apply overwork to specific tasks
+- You can specify `overwork: "false"` in the `projects.types.json` if you don't want apply overwork to specific tasks.
 
   ```json5
    "PBI Desktop, Build and Accessibility.Communication": {

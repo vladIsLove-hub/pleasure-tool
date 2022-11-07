@@ -1,4 +1,4 @@
-import { IStoreCLI, StoreCLINames, StoreItem } from "./types/storeCLI.types";
+import { IStoreCLI, StoreCLINames, StoreItem } from './types/store-cli.types';
 
 class StoreCLI implements IStoreCLI {
 	private store: Array<StoreItem>;
@@ -18,7 +18,7 @@ class StoreCLI implements IStoreCLI {
 		return {
 			overwork: 'overwork',
 			reportName: 'reportName'
-		}
+		};
 	}
 }
 

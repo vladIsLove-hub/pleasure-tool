@@ -1,5 +1,19 @@
 {
     "rules": {
+        "prefer-const": [
+            "error"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-trailing-spaces": [
+            "error"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
         "indent": [
             "error",
             "tab"
@@ -14,12 +28,31 @@
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/no-non-null-assertion": 0,
         "no-constant-condition": 0,
-        "no-async-promise-executor": 0
+        "no-async-promise-executor": 0,
+        "import-helpers/order-imports": [
+            "warn",
+            {
+                "newlinesBetween": "always",
+                "groups": [
+                    "module",
+                    ["parent", "sibling", "index"]
+                ],
+                "alphabetize": { "order": "asc", "ignoreCase": true }
+            }
+        ],
+        "unicorn/filename-case": [
+            "error",
+            {
+                "case": "kebabCase"
+            }
+        ]
     },
     "root": true,
     "parser": "@typescript-eslint/parser",
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "eslint-plugin-import-helpers",
+        "eslint-plugin-unicorn"
     ],
     "extends": [
         "eslint:recommended",

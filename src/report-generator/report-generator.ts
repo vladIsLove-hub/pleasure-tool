@@ -1,14 +1,15 @@
-import { IStatus } from "./types/status.types";
-import { IReport } from "./types/report.types";
-import { ITask } from "./types/task.types";
-import { ILogger } from "../logger/types/logger.types";
-import { IReportGenerator } from "./types/reportGenerator.types";
-import { IStatusParser } from "../parser/types/parser.types";
-import { StoreCLINames } from "../store-cli/types/storeCLI.types";
-import utils from '../utils/Utils';
-import chalk from "chalk";
-import storeCLI from "../store-cli/StoreCLI";
 import config from '../config/pleasure.config';
+import { ILogger } from '../logger/types/logger.types';
+import { errors } from '../messages';
+import { Message } from '../messages/types/messages.types';
+import { IStatusParser } from '../parser/types/parser.types';
+import storeCLI from '../store-cli/store-cli';
+import { StoreCLINames } from '../store-cli/types/store-cli.types';
+import utils from '../utils/utils';
+import { IReportGenerator } from './types/report-generator.types';
+import { IReport } from './types/report.types';
+import { IStatus } from './types/status.types';
+import { ITask } from './types/task.types';
 
 class ReportGenerator implements IReportGenerator {
 	private reports: IReport[] = [];
@@ -23,11 +24,35 @@ class ReportGenerator implements IReportGenerator {
 
 		await this.handleOverworks(statuses);
 
+		const collectedErrors: Message[] = [];
 		for (const status of statuses) {
 			const { date } = status;
-			const taskDescriptions: string[] = await this.getTaskDescriptions(status);
-			const tasks: ITask[] = await this.createTasks(taskDescriptions);
-			const normalizedTasks = await utils.getNormalizedTasksByEfforts(tasks, date, status.overworkTimeInTimeUnits);
+
+			let taskDescriptions: string[];
+			try {
+				taskDescriptions = await this.getTaskDescriptions(status);
+			} catch (e) {
+				collectedErrors.push(e as Message);
+				continue;
+			}
+
+			let tasks: ITask[];
+			try {
+				tasks = await this.createTasks(taskDescriptions, date);
+			} catch (e) {
+				for (const error of e as Message[]) {
+					collectedErrors.push(error);
+				}
+				continue;
+			}
+
+			let normalizedTasks: ITask[];
+			try {
+				normalizedTasks = await utils.getNormalizedTasksByEfforts(tasks, date, status.overworkTimeInTimeUnits);
+			} catch (e) {
+				collectedErrors.push(e as Message);
+				continue;
+			}
 
 			normalizedTasks.forEach((task) => this.reports.push(
 				{
@@ -37,6 +62,11 @@ class ReportGenerator implements IReportGenerator {
 					reportType: task.type
 				}
 			));
+		}
+
+		if (collectedErrors.length) {
+			this.logger.errors(collectedErrors);
+			process.exit();
 		}
 
 		this.reports.sort((a, b) => (Number(new Date(a.date)) - Number(new Date(b.date))));
@@ -51,36 +81,43 @@ class ReportGenerator implements IReportGenerator {
 			.split('\n')
 			.filter((descriptionLine: string) => descriptionLine.length);
 
-		for (const filteredTaskDescription of filteredTaskDescriptions) {
-			if (!filteredTaskDescription.trim().startsWith('-')) {
-				this.logger.error(`Wrong description format for the following date: ${date}. Each description must start with '-'.`)
-			}
+		if (!filteredTaskDescriptions.length) {
+			throw { text: errors.DescriptionsNotFound, args: [date] };
 		}
 
-		if (!filteredTaskDescriptions.length) {
-			this.logger.error(`
-          No descriptions were found in <statuses.txt> file which start with '-' for the following date: ${date}.
-        `);
+		for (const filteredTaskDescription of filteredTaskDescriptions) {
+			if (!filteredTaskDescription.trim().startsWith('-')) {
+				throw { text: errors.InvalidDescriptionFormat, args: [date] };
+			}
 		}
 
 		return filteredTaskDescriptions.map((description: string) => description.replace(/\s{0,}-\s{0,}/, '').replace('\r', ''));
 	}
 
-	private async createTasks(taskDescriptions: string[]): Promise<ITask[]> {
+	private async createTasks(taskDescriptions: string[], date: string): Promise<ITask[]> {
 		const tasks: ITask[] = [];
 
+		const collectedErrors: Message[] = [];
 		for (const taskDescription of taskDescriptions) {
 			const descriptionType: string = await this.getDescriptionType(taskDescription) || '';
 
 			if (!descriptionType) {
-				this.logger.error(`No matching description type was found for description type: ${chalk.underline(taskDescription)}`)
+				collectedErrors.push({
+					text: errors.NoMatchingDescriptionType,
+					args: [date, taskDescription]
+				});
+				continue;
 			}
 
 			tasks.push({
 				type: descriptionType,
 				time: config.projectTypes[descriptionType].max,
 				description: taskDescription,
-			})
+			});
+		}
+
+		if (collectedErrors.length) {
+			throw collectedErrors;
 		}
 
 		return tasks;

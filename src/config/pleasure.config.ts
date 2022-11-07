@@ -6,6 +6,6 @@ const getPleasureConfig = (): PleasureConfig => {
 	const parsedPleasureConfig = JSON.parse(JSON.stringify(pleasureConfig));
 	pleasureConfigValidator.validate(parsedPleasureConfig);
 	return parsedPleasureConfig;
-}
+};
 
 export default getPleasureConfig();

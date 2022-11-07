@@ -1,14 +1,16 @@
-import * as readline from 'readline';
-import { stdin as input, stdout as output } from 'node:process';
-import { IReadline } from './types/readline.types';
-import { readlineValidator, readlineCliOptionsValidator } from './ReadlineValidator';
-import { ILogger } from '../logger/types/logger.types';
-import { IPromisify } from '../utils/types/promisify.types';
-import promisify from '../utils/Promisify';
-import logger from '../logger/Logger';
-import pleasureCliOptions from '../../pleasure.readline.json';
-import storeCLI from '../store-cli/StoreCLI';
 import chalk from 'chalk';
+import { stdin as input, stdout as output } from 'node:process';
+import * as readline from 'node:readline';
+
+import pleasureCliOptions from '../../pleasure.readline.json';
+import logger from '../logger/logger';
+import { ILogger } from '../logger/types/logger.types';
+import storeCLI from '../store-cli/store-cli';
+import promisify from '../utils/promisify';
+import { IPromisify } from '../utils/types/promisify.types';
+import { readlineValidator, readlineCliOptionsValidator } from './readline-validator';
+import { IReadline } from './types/readline.types';
+
 
 class Readline implements IReadline {
 	constructor(private logger: ILogger, private promisify: IPromisify) { }
@@ -20,20 +22,27 @@ class Readline implements IReadline {
 		for (const [optionName, { question, defaultValue }] of Object.entries(pleasureCliOptions)) {
 			let answer;
 			while (true) {
-				answer = (await questionAsync(chalk.bold.magenta(`${question} (default: ${defaultValue}): `))) || defaultValue;
+				const supportedValuesTip = this.getSupportedValuesTip(optionName);
+				answer = (await questionAsync(chalk.bold.magenta(`${question} (${supportedValuesTip}; default value: ${defaultValue}): `))) || defaultValue;
 				try {
 					await readlineValidator.validate(optionName, answer);
 					break;
 				} catch (e) {
-					if (e instanceof Error) {
-						this.logger.warn(e.message);
-					}
+					continue;
 				}
 			}
 			await storeCLI.push({ optionName, answer });
 		}
 
 		rl.close();
+	}
+
+	private getSupportedValuesTip(optionName: string): string {
+		const cliOption = pleasureCliOptions[optionName];
+		const { constraints } = cliOption;
+		return cliOption.type === 'number'
+			? `supported values: ${constraints.format.join(', ')}`
+			: `supported length from ${constraints.min} to ${constraints.max}`;
 	}
 }
 
